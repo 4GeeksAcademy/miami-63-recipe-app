@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+import Logo from "../../img/chef-dojo-logo.png";
 
 export const Navbar = () => {
 

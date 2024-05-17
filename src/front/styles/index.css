@@ -1,3 +1,25 @@
 /* 
     General Styles used on every website (Don't Repeat Yourself)
 */
+:root {
+    --beige: #FFF5D5;
+    --red: #E45151;
+    --dark: #333333;
+}
+
+.button-accent {
+    font-weight: bold;
+    color: #ffffff;
+    background-color: var(--red);
+    border-color: var(--red);
+}
+
+.button-default {
+    font-weight: bold;
+    color: var(--dark);
+    border-color: var(--dark);
+}
+
+body {
+    background-color: var(--beige);
+}
