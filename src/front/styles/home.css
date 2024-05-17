@@ -69,3 +69,6 @@ body {
     margin: 0 40px;
 }
 
+.bg-danger {
+    text-decoration: none !important;
+}
