@@ -6,69 +6,15 @@
     on that page only (the ones not reused in other pages).
 */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.home-title {
+    font-size: 5em;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: var(--dark);
 }
 
-body {
-    background: #f2f2f2;
-}
-
-@keyframes slide {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-100%)
-    }
-}
-
-.images {
-    overflow: hidden;
-    padding: 60px 0;
-    background: white;
-    white-space: nowrap;
-    position: relative;
-}
-
-.images:before, .logos:after {
-    position: absolute;
-    top: 0;
-    width: 250px;
-    height: 100%;
-    content: "";
-    z-index: 2;
-}
-
-.images:before {
-    left: 0;
-    background: linear-gradient(to left, rgba(255,255,255, 0), white);
-}
-
-.images:after {
-    right: 0;
-    background: linear-gradient(to right, rgba(255,255,255, 0), white);
-}
-
-.images:hover .image-slide {
-    animation-play-state: paused;
-}
-
-.image-slide {
-    display: inline-block;
-    animation: 35s slide infinite linear;
-}
-
-.image-slide img {
-    height: 250px;
-    width: 250px;
-    border-radius: 10px;
-    object-fit: cover;
-    margin: 0 40px;
-}
-
-.bg-danger {
-    text-decoration: none !important;
+.home-blurp {
+    font-size: 1.4em;
+    line-height: 1.25em;
+    color: var(--dark);
 }
