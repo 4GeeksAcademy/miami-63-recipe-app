@@ -9,6 +9,7 @@ import urllib.request
 import urllib.parse
 import json
 import os
+import requests
 
 api = Blueprint('api', __name__)
 
@@ -17,48 +18,23 @@ CORS(api)
 
 @api.route('/search', methods=['POST'])
 def handle_search():
+    print("Request received")
     searchUrl="https://api.nal.usda.gov/fdc/v1/foods/search"
-    searchParams =request_body["search"]
-    # data={
-    #     "query":searchParams,
-    # }
-    # params={
-    #     "Content-Type": "application/json",
-    #     "X-Api-Key":os.environ.get(API_KEY), 
-    # }
-    # try:
-    #     response=requests.post(searchUrl, headers=params, json=data)
-    #     return response.json()
-    # except requests.exceptions.RequestException as e:
-    #     print(f"Error fetching data from api: {e}")
-    # Prepare the URL parameters
-    params = {
-        "query": searchParams
+    
+    payload = {
+        "query": request.json["query"]
     }
-    encoded_params = urllib.parse.urlencode(params)  # Encode parameters for URL
+    #encoded_params = urllib.parse.urlencode(params)  # Encode parameters for URL
 
     # Prepare the request headers
     headers = {
         "Content-Type": "application/json",
-        "X-Api-Key": "vAQDhBNLzyLTc1uPSLlZQ7Dusf84Kwzdmc94zREG",
+        "X-Api-Key": os.environ["API_KEY"],
     }
 
     try:
-        print("Trying to get the data", jsonify(response_data))
-        # Build the complete URL with parameters
-        url = f"{searchUrl}?{encoded_params}"
-
-        # Create the request object
-        req = urllib.request.Request(url, headers=headers)
-
-        # Send the POST request and get the response
-        with urllib.request.urlopen(req) as response:
-            data = response.read().decode("utf-8")
-            response_data = json.loads(data)  # Parse JSON response
-
-        # Return the JSON data from the response
-        print("Got the data", jsonify(response_data))
-        return jsonify(response_data)
+        response=requests.post(searchUrl, headers=headers, json=payload)
+        return response.json()
     except urllib.error.URLError as e:
         print(f"Error fetching data from USDA API: {e}")
         return jsonify({"error": "Error fetching data from API."}), 500
