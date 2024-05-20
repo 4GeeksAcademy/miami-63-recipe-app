@@ -12,6 +12,7 @@ import { Signup } from "./pages/signup";
 import { Login } from "./pages/login";
 import { Single } from "./pages/single";
 import { UserHome } from "./pages/user-home";
+import { Search } from "./pages/search";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
@@ -32,6 +33,7 @@ const LayoutContent = () => {
                     <Route element={<Signup />} path="/signup" />
                     <Route element={<Login />} path="/login" />
                     <Route element={<Single />} path="/single/:theid" />
+                    <Route element={<Search />} path="/search" />
                     <Route element={<h1>Not found!</h1>} />
                 </Routes>
             </BrowserRouter>
