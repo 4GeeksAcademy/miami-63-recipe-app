@@ -1,5 +1,6 @@
 .search-section {
     height: 300px;
+    height: 350px;
 }
 
 .label {
@@ -11,6 +12,7 @@
 }
   
 .search-query-input {
+#searchQueryInput {
     width: 100%;
     height: 2.8rem;
     background: #f5f5f5;
@@ -19,9 +21,10 @@
     border-radius: 1.625rem;
     padding: 0 3.5rem 0 1.5rem;
     font-size: 1rem;
-}
+}}
 
 .search-query-submit {
+#searchQuerySubmit {
     width: 3.5rem;
     height: 2.8rem;
     margin-left: -3.5rem;
@@ -39,3 +42,6 @@
     height: 200px;
     border-radius: 40px;
 }
+#searchQuerySubmit:hover {
+    cursor: pointer;
+}}

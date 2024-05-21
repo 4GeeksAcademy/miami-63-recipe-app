@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useContext, useEffect} from "react";
 import { Context } from "../store/appContext";
 import { Link} from "react-router-dom";
@@ -74,35 +73,7 @@ export const UserHome = () => {
                     <img className="category-image mb-4" src="https://healthyfitnessmeals.com/wp-content/uploads/2021/02/Honey-garlic-chicken-meal-prep-9.jpg" />
                     <img className="category-image mb-4" src="https://healthyfitnessmeals.com/wp-content/uploads/2021/02/Honey-garlic-chicken-meal-prep-9.jpg" />
                     <img className="category-image mb-4" src="https://healthyfitnessmeals.com/wp-content/uploads/2021/02/Honey-garlic-chicken-meal-prep-9.jpg" />
-=======
-import React, { useContext, useEffect } from "react";
-import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
-import "../../styles/user-home.css";
-
-import { Carousel } from "../component/carousel";
-
-export const userHome = () => {
-    const { store, actions } = useContext(Context);
-
-    return (
-        <>
-            <Carousel />
-
-            <div className="container text-center">
-
-                <div className="mb-5">
-                    <h1 className="home-title mb-3">
-                        The best place<br />
-                        to store your recipes!
-                    </h1>
-                    <p className="home-blurp">Chef-Dojo is the ultimate app for storing, organizing, and sharing your culinary creations. Whether you are a seasoned chef or just starting out in the kitchen, Chef-Dojo makes it easy to keep all your recipes in one place.</p>
-                </div>
-
-                <div className="">
-                    <Link to={"/signup"} className="btn button-accent rounded-pill fs-5 ps-4 pe-4 pt-3 pb-3">Get Started</Link>
->>>>>>> 4ce9365 (Initial commit for the user home page)
-                </div>
+                    </div>
             </div>
         </>
     );
