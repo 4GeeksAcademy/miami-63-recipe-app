@@ -82,12 +82,12 @@ def handle_search():
                 }
                 for foodNutrient in food["foodNutrients"]:
                     if foodNutrient["nutrientName"] in foodNutrients:
-                        flattened_food[
-                            f"{foodNutrient['nutrientName']}UnitName": foodNutrient["unitName"]
-                        ]
-                        flattened_food[
-                            f"{foodNutrient['nutrientName']}Value": foodNutrient["value"]
-                        ]
+                        flattened_food[f"{foodNutrient['nutrientName']}UnitName"]= foodNutrient["unitName"]
+                            
+                        
+                        flattened_food[f"{foodNutrient['nutrientName']}Value"]= foodNutrient["value"]
+
+                        
                         
                     
                 flattened_foods.append(flattened_food)
