@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 
+
+<h1>Log in With Email</h1>
+
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

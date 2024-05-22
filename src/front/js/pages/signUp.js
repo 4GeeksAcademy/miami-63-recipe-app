@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./signUp.css";
 
+<h1>Sign Up to Chef-Dojo</h1>
+
 const signUp = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
