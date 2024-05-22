@@ -3,8 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { BackendURL } from "./component/backendURL";
 
 import { Home } from "./pages/home";
-import { Single } from "./pages/single";
 import { UserHome } from "./pages/user-home";
+import { ItemDetail } from "./pages/item-detail";
 import { Search } from "./pages/search";
 // import { Signup } from "./pages/signup";
 // import { Login } from "./pages/login";
@@ -28,7 +28,7 @@ const Layout = () => {
                 <Routes>
                     <Route element={<Home />} path="/" />
                     <Route element={<UserHome />} path="/user-home" />
-                    <Route element={<Single />} path="/single/:theid" />
+                    <Route element={<ItemDetail />} path="/item-detail" />
                     <Route element={<Search />} path="/search" />
                     {/* <Route element={<Signup />} path="/signup" /> */}
                     {/* <Route element={<Login />} path="/login" /> */}

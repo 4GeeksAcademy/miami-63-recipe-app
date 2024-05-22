@@ -8,7 +8,7 @@ export const Navbar = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<nav className="navbar pt-3 pb-3 mb-5">
+		<nav className="navbar pt-4 pb-4">
 			<div className="container">
 				<Link to={"/"}>
 					<img src={Logo} />
