@@ -1,5 +1,5 @@
 .search-section {
-    height: 350px;
+    height: 300px;
 }
 
 .label {
@@ -10,7 +10,7 @@
     margin-bottom: 1rem;
 }
   
-#searchQueryInput {
+.search-query-input {
     width: 100%;
     height: 2.8rem;
     background: #f5f5f5;
@@ -21,7 +21,7 @@
     font-size: 1rem;
 }
 
-#searchQuerySubmit {
+.search-query-submit {
     width: 3.5rem;
     height: 2.8rem;
     margin-left: -3.5rem;
@@ -30,6 +30,12 @@
     outline: none;
 }
 
-#searchQuerySubmit:hover {
+.search-query-submit:hover {
     cursor: pointer;
+}
+
+.category-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 40px;
 }

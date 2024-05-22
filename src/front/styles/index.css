@@ -30,3 +30,9 @@ body {
     background-color: var(--light);
     font-family: 'Roboto', Arial, sans-serif;
 }
+
+.scrollable-section {
+    height: 25vw;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
