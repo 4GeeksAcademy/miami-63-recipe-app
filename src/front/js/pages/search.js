@@ -4,7 +4,7 @@ export const Search = () => {
     const [search, setSearch] = useState("")
     const searchData = async() => { 
         try {
-        const opts={
+        const opts = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -21,6 +21,7 @@ export const Search = () => {
       } catch (error) {
           console.log("Error searching image", error)
       }
+
     }
    
   return (

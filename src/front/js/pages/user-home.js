@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect} from "react";
+import React, { useState, useContext} from "react";
 import { Context } from "../store/appContext";
 import { Link} from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
@@ -17,7 +18,8 @@ export const UserHome = () => {
         }
     }, [store.token, forward]);
 
-    const handleSearch = () => {
+    const handleSearch = (event) => {
+		// event.preventDefault()
 		actions.itemSearch(search);
 	};
 
@@ -49,6 +51,10 @@ export const UserHome = () => {
                                     </span>
                                     <span>
                                         <button type="button" className="btn button-accent rounded-pill">+ Add Ingredient</button>
+                                        <Link to={`/item-detail`} className="text-decoration-none text-muted">{item.name}</Link>
+                                    </span>
+                                    <span>
+                                        <button type="button" class="btn button-accent rounded-pill">+ Add Ingredient</button>
                                     </span>
                                 </li>
                             ))}
@@ -74,7 +80,7 @@ export const UserHome = () => {
                     <img className="category-image mb-4" src="https://healthyfitnessmeals.com/wp-content/uploads/2021/02/Honey-garlic-chicken-meal-prep-9.jpg" />
                     <img className="category-image mb-4" src="https://healthyfitnessmeals.com/wp-content/uploads/2021/02/Honey-garlic-chicken-meal-prep-9.jpg" />
                     </div>
-            </div>
+                </div>
         </>
     );
-};
+}

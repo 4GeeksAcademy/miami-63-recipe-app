@@ -3,6 +3,10 @@ import { Context } from "../store/appContext";
 import { useParams } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 
+import React, { useState, useContext} from "react";
+import { Context } from "../store/appContext";
+import { Link } from "react-router-dom";
+import SearchBG from "../../img/steak-image.png";
 import "../../styles/user-home.css";
 
 export const ItemDetail = () => {
@@ -82,6 +86,7 @@ export const ItemDetail = () => {
                         </tr>
                     </tbody>
                 </table>
+
             </div>
         </>
     );
