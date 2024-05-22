@@ -3,8 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { BackendURL } from "./component/backendURL";
 
 import { Home } from "./pages/home";
-import { Single } from "./pages/single";
 import { UserHome } from "./pages/user-home";
+import { ItemDetail } from "./pages/item-detail";
+import { Search } from "./pages/search";
 // import { Signup } from "./pages/signup";
 // import { Login } from "./pages/login";
 import { CreateRecipe } from "./pages/CreateRecipe";

@@ -4,7 +4,7 @@ export const Search = () => {
     const [search, setSearch] = useState("")
     const searchData = async() => { 
         try {
-        const opts={
+        const opts = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -18,9 +18,9 @@ export const Search = () => {
         fetch('https://api.nal.usda.gov/fdc/v1/foods/search', opts)
         .then(response => response.json())
         .then(data => console.log(data))
-    } catch (error) {
-        console.log("Error searching image", error)
-    }
+      } catch (error) {
+          console.log("Error searching image", error)
+      }
 
     }
    
