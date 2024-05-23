@@ -38,10 +38,10 @@ export const ItemDetail = () => {
         <>
             <div className="container">
                 <h1 className="mb-4">Nutrition Facts</h1>
-                <h3 className="mb-4">{item.name}</h3>
+                <h3 className="mb-4">Banana</h3>
 
-                <table className="table table-striped">
-                    <thead className="table-dark">
+                <table class="table table-striped">
+                    <thead class="table-dark">
                         <tr>
                             <th className={column_1}>Elements</th>
                             <th className={text_right}>Amount</th>
@@ -50,43 +50,37 @@ export const ItemDetail = () => {
                     </thead>
                     <tbody>
                         <tr>
-                            <td >Calories</td>
-                            <td className={text_right}>{item.calories_value}</td>
-                            <td className={text_right}>{item.calories_unit}</td>
-                        </tr>
-                        <tr>
                             <td >Total Fat</td>
-                            <td className={text_right}>{item.fat_value}</td>
-                            <td className={text_right}>{item.fat_unit}</td>
+                            <td className={text_right}>4.8</td>
+                            <td className={text_right}>g</td>
                         </tr>
                         <tr>
                             <td>Cholesterol</td>
-                            <td className={text_right}>{item.cholesterol_value}</td>
-                            <td className={text_right}>{item.cholesterol_unit}</td>
+                            <td className={text_right}>165</td>
+                            <td className={text_right}>mg</td>
                         </tr>
                         <tr>
                             <td>Sodium</td>
-                            <td className={text_right}>{item.sodium_value}</td>
-                            <td className={text_right}>{item.sodium_unit}</td>
+                            <td className={text_right}>71</td>
+                            <td className={text_right}>mg</td>
                         </tr>
                         <tr>
                             <td>Carbohydrates</td>
-                            <td className={text_right}>{item.carbohydrates_value}</td>
-                            <td className={text_right}>{item.carbohydrates_unit}</td>
+                            <td className={text_right}>71</td>
+                            <td className={text_right}>mg</td>
                         </tr>
                         <tr>
                             <td>Fiber</td>
-                            <td className={text_right}>{item.fiber_value}</td>
-                            <td className={text_right}>{item.fiber_unit}</td>
+                            <td className={text_right}>71</td>
+                            <td className={text_right}>mg</td>
                         </tr>
                         <tr>
                             <td>Protein</td>
-                            <td className={text_right}>{item.protein_value}</td>
-                            <td className={text_right}>{item.protein_unit}</td>
+                            <td className={text_right}>71</td>
+                            <td className={text_right}>mg</td>
                         </tr>
                     </tbody>
                 </table>
-
             </div>
         </>
     );
