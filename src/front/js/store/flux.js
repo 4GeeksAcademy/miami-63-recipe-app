@@ -61,6 +61,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 					const result = await response.json();
 					console.log("This came from the back-end", result);
+					sessionStorage.setItem("token", result.access_token);
+					setStore({ token: result.access_token });
+					return true;
 				} catch (error) {
 					console.error('Error fetching data:', error);
 				}

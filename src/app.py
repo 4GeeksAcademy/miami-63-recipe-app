@@ -12,6 +12,7 @@ from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 CORS(app)
