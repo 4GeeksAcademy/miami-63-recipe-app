@@ -13,25 +13,19 @@ export const Navbar = () => {
 				<Link to={"/"}>
 					<img src={Logo} />
 				</Link>
-				{
-					store.user ?
-						(
-							<div className="Logout-Button">
-								<div className="d-flex align-items-center justify-content-center bg-danger rounded-pill" style={{ color: 'white', fontSize: '1.25em', marginLeft: '1750px', width: '150px', height: '45px' }}><span class="border border-black">Logout</span></div>
-							</div>
-						) : (
-
-							<div className="d-flex align-items-center">
-								<div className="Login-Button">
-									<Link to={"/login"} className="btn button-default rounded-pill me-3">Log In</Link>
-								</div>
-								<div className="Signup-Button">
-									<Link to={"/signup"} className="btn button-accent rounded-pill">Sign Up</Link>
-								</div>
-							</div>
-						)
+				
+				{!store.token ?
+					<div className="d-flex align-items-center">
+						<div className="Login-Button">
+							<Link to={"/login"} className="btn button-default rounded-pill me-3">Log In</Link>
+						</div>
+						<div className="Signup-Button">
+							<Link to={"/signup"} className="btn button-accent rounded-pill">Sign Up</Link>
+						</div>
+					</div> 
+					:
+						<button onClick={() => actions.handleLogout()} className="btn button-default rounded-pill">Logout</button>
 				}
-
 			</div>
 		</nav>
 	);
