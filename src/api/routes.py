@@ -94,17 +94,19 @@ def search():
 
         # Flatten the payload to only include desired fields
         if 'foods' in response_data:
+            
             flattened_foods = []
+            
             for food in response_data['foods']:
                 
                 flattened_food = {
-                     "name": food.get("description"),
-                    #  "item-name": food.get("finalFoodInputFoods"),
+                     "name": food.get("description")
                 }
+
                 for foodNutrient in food["foodNutrients"]:
                     if foodNutrient["nutrientName"] in foodNutrients:
-                        flattened_food[f"{foodNutrient['nutrientName']}UnitName"]= foodNutrient["unitName"]
-                        flattened_food[f"{foodNutrient['nutrientName']}Value"]= foodNutrient["value"]
+                        flattened_food[f"{foodNutrient['nutrientName']}UnitName"] = foodNutrient["unitName"]
+                        flattened_food[f"{foodNutrient['nutrientName']}Value"] = foodNutrient["value"]
 
                 flattened_foods.append(flattened_food)
             
