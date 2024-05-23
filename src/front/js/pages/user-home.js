@@ -10,11 +10,16 @@ export const UserHome = () => {
     const [search, setSearch] = useState("")
     const forward = useNavigate();
 
+    // Sends the user to the main home page if not logged in
+    useEffect(() => {
+        if (store.token == null) {
+            forward("/");
+        }
+    }, [store.token, forward]);
+
     const handleSearch = (event) => {
 		actions.itemSearch(search);
 	};
-
-    if (store.token == null) forward("/");
 
     return (
         <>

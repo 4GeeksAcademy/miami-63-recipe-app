@@ -8,14 +8,18 @@ export const Signup = () => {
     const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
     const forward = useNavigate();
-    const token = sessionStorage.getItem("token");
+
+    // Sends the user to the main home page if not logged in
+    useEffect(() => {
+        if (store.token == null) {
+            forward("/");
+        }
+    }, [store.token, forward]);
 
     const handleClickSubmit = (event) => {
-		event.preventDefault()
 		actions.handleSignup(email, password);
+        event.preventDefault()
 	};
-
-    // if (store.token && store.token != "" && store.token != undefined) forward("/user-home");
 
     return (
         <>
