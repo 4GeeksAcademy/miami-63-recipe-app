@@ -5,6 +5,11 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+
 import urllib.request
 import urllib.parse
 import json
@@ -15,6 +20,7 @@ api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
+
 foodNutrients = [
      "Carbohydrate, by difference",
      "Total lipid (fat)",
@@ -26,6 +32,38 @@ foodNutrients = [
 
 ]
 
+# Create a route to authenticate your users and return JWTs. The
+# create_access_token() function is used to actually generate the JWT.
+@api.route("/login", methods=["POST"])
+def login():
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    
+    if email is None or password is None:
+        return "Please fill out the riquered fields"
+    
+    user = db.session.execute(db.select(User).filter_by(email=email, password=password)).scalar_one()
+    print(user)
+
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token)
+
+@api.route("/signup", methods=["POST"])
+def signup():
+    print("this is working")
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    if email is None or password is None:
+        return "Please fill out the riquered fields"
+
+    user = User(email=email, password=password)
+    db.session.add(user)
+    db.session.commit()
+    
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token)
+
+# Endpoint for ingredient search feature
 @api.route('/search', methods=['POST'])
 def search():
     print("Request received")
@@ -65,12 +103,3 @@ def search():
     except requests.RequestException as e:
         print(f"Error fetching data from USDA API: {e}")
         return jsonify({"error": "Error fetching data from API."}), 500
-
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
