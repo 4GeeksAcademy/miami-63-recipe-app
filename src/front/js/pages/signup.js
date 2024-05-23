@@ -11,7 +11,7 @@ export const Signup = () => {
 
     // Sends the user to the main home page if not logged in
     useEffect(() => {
-        if (store.token == null) {
+        if (store.token && store.token != "" && store.token != undefined) {
             forward("/");
         }
     }, [store.token, forward]);
