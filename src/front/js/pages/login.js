@@ -11,12 +11,17 @@ export const Login = () => {
     const forward = useNavigate();
     const token = sessionStorage.getItem("token");
 
-    const handleClickSubmit = (event) => {
-		event.preventDefault()
-		actions.handleLogin(email, password);
-	};
+    // Sends the user to their page if logged in
+    useEffect(() => {
+        if (store.token && store.token != "" && store.token != undefined) {
+            forward("/user-home");
+        }
+    }, [store.token, forward]);
 
-    if (store.token && store.token != "" && store.token != undefined) forward("/user-home");
+    const handleClickSubmit = (event) => {
+		actions.handleLogin(email, password);
+        event.preventDefault()
+	};
 
     return (
         <>

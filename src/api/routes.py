@@ -10,16 +10,6 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
-import urllib.request
-import urllib.parse
-import json
-import os
-import requests
-
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-
 from flask_bcrypt import Bcrypt
 
 import urllib.request
@@ -66,23 +56,28 @@ def login():
     password = request.json.get("password", None)
     
     if email is None or password is None:
-        return "Please fill out the riquered fields"
+        return jsonify({"msg": "Please fill out the required fields"}), 400
     
-    user = db.session.execute(db.select(User).filter_by(email=email, password=password)).scalar_one()
-    print(user)
-
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
+    
+    if user and bcrypt.check_password_hash(user.password, password):
+        access_token = create_access_token(identity=email)
+        
+        return jsonify(access_token=access_token)
+    else:
+        return jsonify({"msg": "Bad email or password"}), 401
 
 @api.route("/signup", methods=["POST"])
 def signup():
-    print("this is working")
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    if email is None or password is None:
-        return "Please fill out the riquered fields"
 
-    user = User(email=email, password=password)
+    if email is None or password is None:
+        return jsonify({"msg": "Please fill out the required fields"}), 400
+
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    user = User(email=email, password=hashed_password)
     db.session.add(user)
     db.session.commit()
     
