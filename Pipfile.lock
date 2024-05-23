@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "74f92d76f687bb774828613a3a513123fe2ffdb429b95b351d29721dddfd3fb8"
+            "sha256": "8139609cafb5c4e9a65cc85835088e06a72a2821a631a33398f83e1997a0428a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -165,6 +165,14 @@
             ],
             "index": "pypi",
             "version": "==3.0.10"
+        },
+        "flask-jwt-extended": {
+            "hashes": [
+                "sha256:63a28fc9731bcc6c4b8815b6f954b5904caa534fc2ae9b93b1d3ef12930dca95",
+                "sha256:9215d05a9413d3855764bcd67035e75819d23af2fafb6b55197eb5a3313fdfb2"
+            ],
+            "index": "pypi",
+            "version": "==4.6.0"
         },
         "flask-migrate": {
             "hashes": [
@@ -446,6 +454,14 @@
             "index": "pypi",
             "version": "==2.9.5"
         },
+        "pyjwt": {
+            "hashes": [
+                "sha256:57e28d156e3d5c10088e0c68abb90bfac3df82b40a71bd0daa20c65ccd5c23de",
+                "sha256:59127c392cc44c2da5bb3192169a91f429924e17aff6534d70fdc02ab3e04320"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==2.8.0"
+        },
         "python-dotenv": {
             "hashes": [
                 "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca",
@@ -513,11 +529,11 @@
         },
         "requests": {
             "hashes": [
-                "sha256:a7687c12b444eaac951ea87a9627c4f904ac757e7abdc5aac32833234af90378",
-                "sha256:e261cdf010c11a41cb5cb5f1bf3338a7433832029f559a6a7614bd42a967c300"
+                "sha256:21ac9465cdf8c1650fe1ecde8a71669a93d4e6f147550483a2967d08396a56a5",
+                "sha256:eb97e87e64c79e64e5b8ac75cee9dd1f97f49e289b083ee6be96268930725685"
             ],
-            "markers": "python_version >= '3.7'",
-            "version": "==67.1.0"
+            "index": "pypi",
+            "version": "==2.32.1"
         },
         "six": {
             "hashes": [

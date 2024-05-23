@@ -10,12 +10,7 @@ export const Home = () => {
     const { store, actions } = useContext(Context);
     const forward = useNavigate();
 
-    // Sends the user to their page if logged in
-    useEffect(() => {
-        if (store.token && store.token != "" && store.token != undefined) {
-            forward("/user-home");
-        }
-    }, [store.token, forward]);
+    if (store.token && store.token != "" && store.token != undefined) forward("/user-home");
 
     return (
         <>

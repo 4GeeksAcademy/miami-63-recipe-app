@@ -3,6 +3,7 @@ const base = "https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/";
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			token: null,
 			items: []
 		},
 		actions: {
@@ -96,6 +97,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}catch(error){
 					console.log("Error loading message from backend", error)
 				}
+			},
+			handleSignup: async (email, password) => {
+				try {
+					const response = await fetch('https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/signup', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							"email": email,
+							"password": password
+						}),
+					});
+					const result = await response.json();
+					console.log("This came from the back-end", result);
+				} catch (error) {
+					console.error('Error fetching data:', error);
+				}
+			},
+			handleLogout: () => {
+				sessionStorage.removeItem("token")
+				setStore({ token: null });
 			}
 		}
 	};

@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect} from "react";
-import React, { useState, useContext} from "react";
 import { Context } from "../store/appContext";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
 import SearchBG from "../../img/steak-image.png";
 import "../../styles/user-home.css";
@@ -11,17 +10,11 @@ export const UserHome = () => {
     const [search, setSearch] = useState("")
     const forward = useNavigate();
 
-    // Sends the user to the main home page if not logged in
-    useEffect(() => {
-        if (store.token == null) {
-            forward("/");
-        }
-    }, [store.token, forward]);
-
     const handleSearch = (event) => {
-		// event.preventDefault()
 		actions.itemSearch(search);
 	};
+
+    if (store.token == null) forward("/");
 
     return (
         <>
@@ -54,7 +47,7 @@ export const UserHome = () => {
                                         <Link to={`/item-detail`} className="text-decoration-none text-muted">{item.name}</Link>
                                     </span>
                                     <span>
-                                        <button type="button" class="btn button-accent rounded-pill">+ Add Ingredient</button>
+                                        <button type="button" className="btn button-accent rounded-pill">+ Add Ingredient</button>
                                     </span>
                                 </li>
                             ))}
