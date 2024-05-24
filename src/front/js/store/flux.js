@@ -122,6 +122,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			handleLogout: () => {
 				sessionStorage.removeItem("token")
 				setStore({ token: null });
+			},
+			localStorageToStore: () => {
+				const storedItems = JSON.parse(localStorage.getItem("items"));
+				if (storedItems) {
+                    setStore({ items: storedItems });
+                };
+				console.log(getStore().items)
 			}
 		}
 	};
