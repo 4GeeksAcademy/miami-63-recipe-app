@@ -26,16 +26,17 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-foodNutrients = [
-     "Carbohydrate, by difference",
-     "Total lipid (fat)",
-     "Protein",
-     "KCAL",
-     "Sugars, total including NLEA",
-     "Fiber, total dietary",
-     "Sodium, Na",
-
-]
+# Define a dictionary to map original nutrient names to custom property names
+custom_property_names = {
+    "Carbohydrate, by difference": "carbohydrates",
+    "Total lipid (fat)": "fat",
+    "Protein": "protein",
+    "Energy": "calories",
+    "Sugars, total including NLEA": "sugars",
+    "Fiber, total dietary": "fiber",
+    "Sodium, Na": "sodium",
+    "Cholesterol": "cholesterol"
+}
 
 # Create a route to authenticate your users and return JWTs. The
 # create_access_token() function is used to actually generate the JWT.
@@ -100,13 +101,16 @@ def search():
             for food in response_data['foods']:
                 
                 flattened_food = {
-                     "name": food.get("description")
+                     "name": food.get("description"),
+                     "id": food.get("fdcId")
                 }
 
                 for foodNutrient in food["foodNutrients"]:
-                    if foodNutrient["nutrientName"] in foodNutrients:
-                        flattened_food[f"{foodNutrient['nutrientName']}UnitName"] = foodNutrient["unitName"]
-                        flattened_food[f"{foodNutrient['nutrientName']}Value"] = foodNutrient["value"]
+                    nutrient_name = foodNutrient["nutrientName"]
+                    if nutrient_name in custom_property_names:
+                        custom_property_name = custom_property_names[nutrient_name]
+                        flattened_food[f"{custom_property_name}_unit"] = foodNutrient["unitName"]
+                        flattened_food[f"{custom_property_name}_value"] = foodNutrient["value"]
 
                 flattened_foods.append(flattened_food)
             
