@@ -1,3 +1,5 @@
+const base = "https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -7,7 +9,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 			itemSearch: async (search) => {
 				try {
-					const response = await fetch('https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/search', {
+					const response = await fetch(base + 'search', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
@@ -18,7 +20,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 					const result = await response.json();
 					setStore({ items: result })
-					console.log("This came from the back-end", result);
+					localStorage.setItem("items", JSON.stringify(result)); // Save items to localStorage
+					console.log("This came from the back-end", getStore().items);
 				} catch (error) {
 					console.error('Error fetching data:', error);
 				}
@@ -29,7 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			handleLogin: async (email, password) => {
 				try {
-					const response = await fetch('https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/login', {
+					const response = await fetch(base + 'login', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
@@ -50,7 +53,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			handleSignup: async (email, password) => {
 				try {
-					const response = await fetch('https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/signup', {
+					const response = await fetch(base + 'signup', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
@@ -72,6 +75,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			handleLogout: () => {
 				sessionStorage.removeItem("token")
 				setStore({ token: null });
+			},
+			localStorageToStore: () => {
+				const storedItems = JSON.parse(localStorage.getItem("items"));
+				if (storedItems) {
+                    setStore({ items: storedItems });
+                };
+				console.log(getStore().items)
 			}
 		}
 	};
