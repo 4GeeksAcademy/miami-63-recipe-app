@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect} from "react";
 import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
 import SearchBG from "../../img/steak-image.png";
 import "../../styles/user-home.css";
@@ -17,7 +17,7 @@ export const UserHome = () => {
         }
     }, [store.token, forward]);
 
-    const handleSearch = (event) => {
+    const handleSearch = () => {
 		actions.itemSearch(search);
 	};
 
@@ -45,7 +45,7 @@ export const UserHome = () => {
                             {store.items.map((item, index) => (
                                 <li className="list-group-item d-flex justify-content-between align-items-center" key={index}>
                                     <span>
-                                        <Link to={`/item-detail`} className="text-decoration-none text-muted">{item.name}</Link>
+                                        <Link to={`/item-detail/${item.id}`} className="text-decoration-none text-muted">{item.name}</Link>
                                     </span>
                                     <span>
                                         <button type="button" className="btn button-accent rounded-pill">+ Add Ingredient</button>
