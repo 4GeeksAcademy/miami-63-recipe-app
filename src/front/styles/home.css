@@ -5,3 +5,16 @@
     one more css for each page that will contain the selected used 
     on that page only (the ones not reused in other pages).
 */
+
+.home-title {
+    font-size: 5em;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: var(--dark);
+}
+
+.home-blurp {
+    font-size: 1.4em;
+    line-height: 1.25em;
+    color: var(--dark);
+}
