@@ -73,22 +73,7 @@ class User_Recipes(db.model):
 #             "mimetype": self.mimetype
 #         }
 
-class User_Categories(db.model):
-    __tablename__ = "user_categories"
 
-    user_id = db.column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    category_id = db.Column(db.Integer, primary_key=True)
-    category_name = db.Column(db.String(90), nullable=False)
-
-    def __repr__(self):
-        return f'<User_Categories {self.category_id}'
-    
-    def serialize(self):
-        return {
-            "user_id": self.user_id,
-            "category_id": self.category_id,
-            "category_name": self.category_name
-        }
 
 class Nutrition_Facts(db.model):
     __tablename__ = "nutrition_facts"
@@ -119,4 +104,23 @@ class Nutrition_Facts(db.model):
             "cholestorol_in_mg": self.cholestorol_in_mg,
             "fiber_in_grams": self.fiber_in_grams,
             "sugars_in_grams": self.sugars_in_grams
+            "id": self.id,
+            "email": self.email,
+            "categories": list(map(lambda x: x.serialize(), self.categories)),
+            # do not serialize the password, its a security breach
+        }
+    
+# User category Model
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    User = db.relationship('User', backref=db.backref('categories', lazy=True))
+    def __repr__(self):
+        return f'<Category {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
         }

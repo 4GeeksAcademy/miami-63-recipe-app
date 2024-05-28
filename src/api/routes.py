@@ -119,3 +119,17 @@ def search():
     except requests.RequestException as e:
         print(f"Error fetching data from USDA API: {e}")
         return jsonify({"error": "Error fetching data from API."}), 500
+
+# fetch user categories
+@api.route('/user/categories', methods=['GET'])
+@jwt_required()
+def get_user_categories():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+    categories=[category.serialize() for category in user.categories]
+    return jsonify({"categories": categories}), 200
+
+
+
