@@ -4,7 +4,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			token: null,
-			items: []
+			items: [],
+			users: {},
+			recipes: [],
+			categories: []
 		},
 		actions: {
 			itemSearch: async (search) => {
