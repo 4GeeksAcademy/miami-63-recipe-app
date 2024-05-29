@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import {useNavigate} from 'react-router-dom';
 import "../../styles/login.css";
-import "../../styles/home.css";
 
 export const Login = () => {
     const { store, actions } = useContext(Context);
@@ -25,21 +24,30 @@ export const Login = () => {
 
     return (
         <>
-            <div className="container">
-                <h1>Login Page</h1>
-                {token && token != "" && token != undefined ? "You are logged in" :
-                    <form className="col-6 border p-4" onSubmit={handleClickSubmit}>
-                        <div className="mb-3">
-                            <label className="form-label">Email address</label>
-                            <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Password</label>
-                            <input type="password" className="form-control" id="exampleInputPassword1" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                        </div>
-                        <button type="submit" className="btn btn-primary">Submit</button>
-                    </form>
-			    }
+            <div className="d-flex vh-100">
+                <div className="col-5 d-flex justify-content-center align-items-center">
+                    <video className="video" autoPlay loop muted>
+                        <source src="https://videos.pexels.com/video-files/3015488/3015488-hd_1280_720_24fps.mp4" type="video/webm" />
+                    </video>
+                </div>
+                <div className="col-7 d-flex justify-content-center">
+                    <div className="col-6 login-form">
+                        <h1>Login Page</h1>
+                        {token && token != "" && token != undefined ? "You are logged in" :
+                            <form className="border p-4" onSubmit={handleClickSubmit}>
+                                <div className="mb-3">
+                                    <label className="form-label">Email address</label>
+                                    <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Password</label>
+                                    <input type="password" className="form-control" id="exampleInputPassword1" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                                </div>
+                                <button type="submit" className="btn btn-primary">Submit</button>
+                            </form>
+                        }
+                    </div>
+                </div>
             </div>
         </>
     );
