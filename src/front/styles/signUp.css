@@ -1,0 +1,32 @@
+.signUp-wrapper{
+    height: 100%;
+    display: flex;
+    justify-content: right; 
+    align-items: center;  
+    padding-top: 200px;
+padding-right: 350px;
+}
+
+.signUp-button{
+    background-color: #e45151
+    ;
+    color: white;              
+            padding: 10px 20px;        
+            border: none;              
+            border-radius: 25px;       
+            font-size: 16px;           
+            cursor: pointer;   
+            width: 500px;
+}
+
+.signUp-img-wrapper{
+    position: absolute;
+    top: 10%;
+    right: 80%;
+    width: 384px;
+    transform: scale(1.5);
+}
+.signUp-img-wrapper img {
+    height: 100%;
+    width: 600px;
+}

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./signUp.css";
+import React, { useContext, useEffect, useState } from "react";
+import { Context } from "../store/appContext";
+import "../../styles/signUp.css";
+import { Link, useNavigate } from "react-router-dom";
 
 <h1>Sign Up to Chef-Dojo</h1>
 
@@ -21,11 +22,12 @@ const signUp = () => {
             alert("Please fill in all fields");
         }
     };
+    
 
     return (
-        <div className="signup-wrapper">
-            <div className="signup-box">
-                <h2>Sign Up</h2>
+        <div className="signUp-wrapper">
+            <div className="signUp-box">
+                <h2>Sign Up For Chef-Dojo</h2>
                 <form onSubmit={handleSignup}>
                     <div className="user-box">
                         <input
@@ -54,12 +56,21 @@ const signUp = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="signup-button">
-                        Sign Up
+                    <button type="submit" className="signUp-button">
+                        Create Account
                     </button>
                 </form>
+                
+                <div class="container">
+          <span class="account">Already have an account?<a href="#"></a></span>
+          <Link to={"/login"}>Log In</Link>
+        </div>
+        <div className="signUp-img-wrapper">
+        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></img>
+        </div>
             </div>
         </div>
+        
     );
 };
 

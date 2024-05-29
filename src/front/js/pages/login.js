@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
-import "./login.css";
-
+import "../../styles/login.css";
 
 <h1>Log in With Email</h1>
 
@@ -24,7 +24,7 @@ const Login = () => {
     return (
         <div className="login-wrapper">
             <div className="login-box">
-                <h2>Login</h2>
+                <h2>Login With Email</h2>
                 <form onSubmit={handleLogin}>
                     <div className="user-box">
                         <input
@@ -48,9 +48,19 @@ const Login = () => {
                         Login
                     </button>
                 </form>
+                <div class="container">
+          <span class="psw"><a href="#">Forgot Password?</a></span>
+        </div>
+        <div className="login-img-wrapper">
+        <img src="https://images.unsplash.com/photo-1540420828642-fca2c5c18abe?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></img>
+        </div>
+        
             </div>
         </div>
+        
     );
 };
+
+
 
 export default Login;
