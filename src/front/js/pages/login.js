@@ -26,8 +26,8 @@ export const Login = () => {
         <>
             <div className="d-flex vh-100">
                 <div className="col-5 d-flex justify-content-center align-items-center">
-                    <video className="video" autoPlay loop muted>
-                        <source src="https://videos.pexels.com/video-files/3015488/3015488-hd_1280_720_24fps.mp4" type="video/webm" />
+                    <video className="video" autoPlay loop muted="muted">
+                        <source src="https://cdn.pixabay.com/video/2023/03/02/152834-804130720_large.mp4" type="video/webm" />
                     </video>
                 </div>
                 <div className="col-7 d-flex justify-content-center">
