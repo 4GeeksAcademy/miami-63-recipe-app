@@ -20,20 +20,16 @@ const LayoutContent = () => {
 
     return (
         <div>
-            <BrowserRouter basename={basename}>
             {renderNavbar && <Navbar />}
-                <Routes>
-                    <Route element={<Home />} path="/" />
-                    <Route element={<UserHome />} path="/user-home" />
-                    <Route element={<ItemDetail />} path="/item-detail/:id" />
-                    <Route element={<Search />} path="/search" />
-                    <Route element={<Signup />} path="/signup" />
-                    <Route element={<Login />} path="/login" />
-                    <Route element={<Single />} path="/single/:theid" />
-                    <Route element={<CreateRecipe />} path="/createrecipe" />
-                    <Route element={<h1>Not found!</h1>} />
-                </Routes>
-            </BrowserRouter>
+            <Routes>
+                <Route element={<Home />} path="/" />
+                <Route element={<UserHome />} path="/user-home" />
+                <Route element={<ItemDetail />} path="/item-detail/:id" />
+                <Route element={<Search />} path="/search" />
+                <Route element={<Signup />} path="/signup" />
+                <Route element={<Login />} path="/login" />
+                <Route element={<h1>Not found!</h1>} />
+            </Routes>
         </div>
     );
 };
