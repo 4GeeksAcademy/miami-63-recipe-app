@@ -25,21 +25,20 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
-class User_Recipes(db.Model):
-    __tablename__ = "user_recipes"
+class User_Recipe(db.model):
+    __tablename__ = "user_recipe"
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False)
     recipe_id = db.Column(db.Integer, primary_key=True)
     recipe_title = db.Column(db.String, nullable=False)
-    recipe_image = db.Column(db.String(2000), nullable=True)
-    image_id = db.Column(db.Integer, db.ForeignKey("recipe_image.image_id"), nullable=False)
+    # recipe_image = db.Column(db.String(2000), nullable=True)
+    # image_id = db.Column(db.Integer, db.ForeignKey("recipe_image.id"), nullable=False)
     description = db.Column(db.String(240), nullable=True)
     recipe_ingredients = db.Column(db.String, nullable=False)
     recipe_directions = db.Column(db.String, nullable=False)
-    nutrition_facts_id = db.Column(db.Integer, db.ForeignKey("nutrition_facts.nutrition_facts_id"), nullable=False)
 
     def __repr__(self):
-        return f'<User_Recipes {self.recipe_id}>'
+        return f'<User_Recipe {self.recipe_id}'
    
     def serialize(self):
         return {
@@ -50,35 +49,17 @@ class User_Recipes(db.Model):
             "description": self.description,
             "recipe_ingredients": self.recipe_ingredients,
             "recipe_directions": self.recipe_directions,
-            "nutrition_facts_id": self.nutrition_facts_id
-        }
-    
-class Recipe_Image(db.Model):
-    __tablename__ = "recipe_image"
-
-    image_id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.Text, unique=True, nullable=True)
-    mimetype = db.Column(db.Text, nullable=False)
-
-    def __repr__(self):
-        return f'<Recipe_Image {self.image_id}>'
-    
-    def serialize(self):
-        return {
-            "image_id": self.image_id,
-            "image": self.image,
-            "mimetype": self.mimetype
         }
 
-class User_Categories(db.Model):
-    __tablename__ = "user_categories"
+class User_Category(db.model):
+    __tablename__ = "user_category"
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False)
     category_id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(90), nullable=False)
 
     def __repr__(self):
-        return f'<User_Categories {self.category_id}>'
+        return f'<User_Category {self.category_id}'
     
     def serialize(self):
         return {
@@ -87,25 +68,28 @@ class User_Categories(db.Model):
             "category_name": self.category_name
         }
 
-class Nutrition_Facts(db.Model):
-    __tablename__ = "nutrition_facts"
+class User_Recipe_Ingredient(db.model):
+    __tablename__ = "user_recipe_ingredient"
 
-    nutrition_facts_id = db.Column(db.Integer, primary_key=True)
-    calories = db.Column(db.Float, nullable=False)
-    protein_in_grams = db.Column(db.Float, nullable=False)
-    carbohydrates_in_grams = db.Column(db.Float, nullable=False)
-    fats_in_grams = db.Column(db.Float, nullable=False)
-    sodium_in_mg = db.Column(db.Float, nullable=False)
-    cholestorol_in_mg = db.Column(db.Float, nullable=False)
-    fiber_in_grams = db.Column(db.Float, nullable=False)
-    sugars_in_grams = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("user_recipe.recipe_id"), nullable=False)
+    user_recipe_ingredient_id = db.Column(db.Integer, primary_key=True)
+    calories = db.Column(db.Float, nullable=True)
+    protein_in_grams = db.Column(db.Float, nullable=True)
+    carbohydrates_in_grams = db.Column(db.Float, nullable=True)
+    fats_in_grams = db.Column(db.Float, nullable=True)
+    sodium_in_mg = db.Column(db.Float, nullable=True)
+    cholestorol_in_mg = db.Column(db.Float, nullable=True)
+    fiber_in_grams = db.Column(db.Float, nullable=True)
+    sugars_in_grams = db.Column(db.Float, nullable=True)
 
     def __repr__(self):
-        return f'<Nutrition_Facts {self.nutrition_facts_id}>'
+        return f'<User_Recipe_Ingredient {self.user_recipe_ingredient_id}'
     
     def serialize(self):
         return {
-            "nutrition_facts_id": self.nutrition_facts_id,
+            "user_id": self.user_id,
+            "recipe_id": self.recipe_id,
             "calories": self.calories,
             "protein_in_grams": self.protein_in_grams,
             "carbohydrates_in_grams": self.carbohydrates_in_grams,
@@ -115,3 +99,23 @@ class Nutrition_Facts(db.Model):
             "fiber_in_grams": self.fiber_in_grams,
             "sugars_in_grams": self.sugars_in_grams
         }
+
+# class Recipe_Image(db.model):
+#     __tablename__ = "recipe_image"
+
+#     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+#     image_id = db.Column(db.Integer, primary_key=True)
+#     image = db.Column(db.Text, unique=True, nullable=True)
+#     mimetype = db.Column(db.Text, nullable=False)
+
+#     def __repr__(self):
+#         return f'<Recipe_Image {self.image_id}'
+    
+#     def serialize(self):
+#         return {
+#             "user_id": self.user_id,
+#             "image_id": self.image_id,
+#             "image": self.image,
+#             "name": self.name,
+#             "mimetype": self.mimetype
+#         }
