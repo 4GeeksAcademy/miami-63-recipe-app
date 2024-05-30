@@ -33,9 +33,9 @@ export const Login = () => {
                 </div>
                 <div className="col-7 d-flex justify-content-center">
                     <div className="col-6 login-form">
-                        <h2>Login With Email</h2>
+                        <h2>Login with Email</h2>
                         
-                        <form onSubmit={handleClickSubmit}>
+                        <form className="mb-3" onSubmit={handleClickSubmit}>
                             <div className="user-box">
                                 <input type="email" required value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                             </div>
@@ -44,7 +44,14 @@ export const Login = () => {
                             </div>
                             <button type="submit" className="col-12 btn button-accent rounded-pill pt-3 pb-3">Login</button>
                         </form>
-                        <Link to={"/#"} className="psw">Forgot Password?</Link>
+                        <div className="d-flex justify-content-between">
+                            <span>
+                                <Link className="text-decoration-none text-muted" to={"/signup"}>No account? Sign Up</Link>
+                            </span>
+                            <span>
+                                <Link className="text-decoration-none text-muted" to={"#"}>Forgot Password?</Link>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
