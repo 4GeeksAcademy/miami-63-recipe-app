@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import {useNavigate} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "../../styles/login.css";
 
 export const Login = () => {
@@ -32,20 +33,25 @@ export const Login = () => {
                 </div>
                 <div className="col-7 d-flex justify-content-center">
                     <div className="col-6 login-form">
-                        <h1>Login Page</h1>
-                        {token && token != "" && token != undefined ? "You are logged in" :
-                            <form className="border p-4" onSubmit={handleClickSubmit}>
-                                <div className="mb-3">
-                                    <label className="form-label">Email address</label>
-                                    <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Password</label>
-                                    <input type="password" className="form-control" id="exampleInputPassword1" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                                </div>
-                                <button type="submit" className="btn btn-primary">Submit</button>
-                            </form>
-                        }
+                        <h2>Login with Email</h2>
+                        
+                        <form className="mb-3" onSubmit={handleClickSubmit}>
+                            <div className="user-box">
+                                <input type="email" required value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+                            </div>
+                            <div className="user-box">
+                                <input type="password" required value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                            </div>
+                            <button type="submit" className="col-12 btn button-accent rounded-pill pt-3 pb-3">Login</button>
+                        </form>
+                        <div className="d-flex justify-content-between">
+                            <span>
+                                <Link className="text-decoration-none text-muted" to={"/signup"}>No account? Sign Up</Link>
+                            </span>
+                            <span>
+                                <Link className="text-decoration-none text-muted" to={"#"}>Forgot Password?</Link>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

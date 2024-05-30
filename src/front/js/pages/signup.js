@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import {useNavigate} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "../../styles/home.css";
 
 export const Signup = () => {
@@ -23,19 +24,32 @@ export const Signup = () => {
 
     return (
         <>
-            <div className="container">
-                <h1>Signup Page</h1>
-                <form className="col-6 border p-4" onSubmit={handleClickSubmit}>
-                    <div className="mb-3">
-                        <label className="form-label">Email address</label>
-                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={(e) => setEmail(e.target.value)}/>
+            <div className="d-flex vh-100">
+                <div className="col-5 d-flex justify-content-center align-items-center">
+                    <video className="video" autoPlay loop muted="muted">
+                        <source src="https://cdn.pixabay.com/video/2023/03/02/152834-804130720_large.mp4" type="video/webm" />
+                    </video>
+                </div>
+                <div className="col-7 d-flex justify-content-center">
+                    <div className="col-6 login-form">
+                        <h2>Sign up to Chef-Dojo</h2>
+                        
+                        <form className="mb-3" onSubmit={handleClickSubmit}>
+                            <div className="user-box">
+                                <input type="email" required value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+                            </div>
+                            <div className="user-box">
+                                <input type="password" required value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                            </div>
+                            <button type="submit" className="col-12 btn button-accent rounded-pill pt-3 pb-3">Signup</button>
+                        </form>
+                        <div className="d-flex justify-content-center">
+                            <span>
+                                <Link className="text-decoration-none text-muted" to={"/login"}>Already have an account? Log In</Link>
+                            </span>
+                        </div>
                     </div>
-                    <div className="mb-3">
-                        <label className="form-label">Password</label>
-                        <input type="password" className="form-control" id="exampleInputPassword1" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    </div>
-                    <button type="submit" className="btn btn-primary">Submit</button>
-                </form>
+                </div>
             </div>
         </>
     );
