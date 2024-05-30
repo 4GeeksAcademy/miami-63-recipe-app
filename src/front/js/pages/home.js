@@ -1,12 +1,21 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 import "../../styles/home.css";
 
 import { Carousel } from "../component/carousel";
 
 export const Home = () => {
     const { store, actions } = useContext(Context);
+    const forward = useNavigate();
+
+    // Sends the user to their page if logged in
+    useEffect(() => {
+        if (store.token && store.token != "" && store.token != undefined) {
+            forward("/user-home");
+        }
+    }, [store.token, forward]);
 
     return (
         <>
