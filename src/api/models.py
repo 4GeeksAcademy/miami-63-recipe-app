@@ -25,11 +25,11 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
-class User_Recipes(db.model):
-    __tablename__ = "user_recipes"
+class User_Recipe(db.Model):
+    __tablename__ = "user_recipe"
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False)
-    recipe_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    recipe_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     recipe_title = db.Column(db.String, nullable=False)
     recipe_image = db.Column(db.String(2000), nullable=True)
     image_id = db.Column(db.Integer, db.ForeignKey("recipe_image.id"), nullable=False)
@@ -52,10 +52,10 @@ class User_Recipes(db.model):
             "recipe_directions": self.recipe_directions,
         }
 
-class User_Category(db.model):
+class User_Category(db.Model):
     __tablename__ = "user_category"
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     category_id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(90), nullable=False)
 
@@ -69,10 +69,10 @@ class User_Category(db.model):
             "category_name": self.category_name
         }
 
-class User_Recipe_Ingredient(db.model):
+class User_Recipe_Ingredient(db.Model):
     __tablename__ = "user_recipe_ingredient"
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey("user_recipe.recipe_id"), nullable=False)
     user_recipe_ingredient_id = db.Column(db.Integer, primary_key=True)
     calories = db.Column(db.Float, nullable=True)
