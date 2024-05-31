@@ -8,13 +8,15 @@ import { ItemDetail } from "./pages/item-detail";
 import { Search } from "./pages/search";
 import { Signup } from "./pages/signup";
 import { Login } from "./pages/login";
+import { ResetRequest } from "./pages/reset-request";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
+import { ResetPassword } from "./pages/reset-request";
 
 const LayoutContent = () => {
     const location = useLocation();
-    const renderNavbar = !["/login", "/signup"].includes(location.pathname);
+    const renderNavbar = !["/login", "/signup", "/reset-request"].includes(location.pathname);
 
     return (
         <div>
@@ -26,6 +28,7 @@ const LayoutContent = () => {
                 <Route element={<Search />} path="/search" />
                 <Route element={<Signup />} path="/signup" />
                 <Route element={<Login />} path="/login" />
+                <Route element={<ResetRequest />} path="/reset-request" />
                 <Route element={<h1>Not found!</h1>} />
             </Routes>
         </div>
