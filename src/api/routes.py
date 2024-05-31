@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, User_Recipe, User_Category, User_Recipe_Ingredient
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -129,3 +129,31 @@ def search():
     
     except requests.RequestException as e:
         print(f"Error fetching data from USDA API: {e}")
+        return jsonify({"error": "Error fetching data from API."}), 500
+
+@api.route('/createrecipe', methods=['POST'])
+@jwt_required()
+def create_recipe():
+    user_email = get_jwt_identity()
+    body = request.get_json()
+    user = User.query.filter_by(email=user_email).first()
+    new_recipe = User_Recipe(user_id=user.id, recipe_title=body['title'], description=body['description'], recipe_ingredients=body['ingredients'], recipe_directions=body['directions'])
+    db.session.add(new_recipe)
+    db.session.commit()
+    return jsonify("recipe successfully created")
+
+@api.route('/createrecipe', methods=['GET'])
+@jwt_required()
+def get_recipe():
+    user_email = get_jwt_identity()
+    user = User.query.filter_by(email=user_email).first()
+    recipes = User_Recipe.query.filter_by(user_id=user.id).all()
+    return jsonify(recipes)
+
+@api.route('/createrecipe/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_recipe(id):
+    recipe = User_Recipe.query.filter_by(recipe_id=id).first()
+    db.session.delete(recipe)
+    db.session.commit()
+    return jsonify("recipe deleted")

@@ -40,7 +40,7 @@ export const CreateRecipe = () => {
   const submitRecipe = (e) => {
     e.preventDefault();
     console.log(name, description, ingredients, directions, calories, protein, carbohydrates, fats, sodium, cholestorol, fiber, sugar)
-    actions.saveRecipe({name:name, description, ingredients, directions, calories, protein, carbohydrates, fats, sodium, cholestorol, fiber, sugar})
+    actions.saveRecipe({name:name, description:description, ingredients:ingredients, directions:directions, calories:calories, protein:protein, carbohydrates:carbohydrates, fats:fats, sodium:sodium, cholestorol:cholestorol, fiber:fiber, sugar:sugar})
     createRecipeBox(recipe)
     setName("")
     setDescription("")
@@ -162,14 +162,10 @@ export const CreateRecipe = () => {
 
 </div>
 
-
-{/* Recipe Grid Columns */}
-<div className="container text-center">
-  <div className="row row-cols-4">
-    <div className="col">Column 1</div>
-    <div className="col">Column 2</div>
-    <div className="col">Column 3</div>
-    <div className="col">Column 4</div>
+{/* Recipe List */}
+<div className="list-group">
+  <div className="recipe_button">
+  <a href="#" className="list-group-item list-group-item-action list-group-item-danger">ABC Recipe</a>
   </div>
 </div>
 

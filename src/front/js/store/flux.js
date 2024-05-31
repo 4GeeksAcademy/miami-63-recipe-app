@@ -5,7 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			token: null,
 			items: [],
-			users: {},
+			users: null,
 			recipes: [],
 			categories: []
 		},
@@ -82,8 +82,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			localStorageToStore: () => {
 				const storedItems = JSON.parse(localStorage.getItem("items"));
 				if (storedItems) {
-                    setStore({ items: storedItems });
-                };
+					setStore({ items: storedItems });
+				};
 				console.log(getStore().items)
 					console.log("This came from the back-end", result);
 				}
