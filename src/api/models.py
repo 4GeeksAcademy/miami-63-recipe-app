@@ -11,7 +11,6 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer  # Correc
 db = SQLAlchemy()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "ZESJxyxt7rzzmrFNRVumV3VnzmSuJ1W5"
 
 class User(db.Model):
     __tablename__ = "user"
