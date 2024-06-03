@@ -1,27 +1,25 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
-import {useNavigate} from 'react-router-dom';
-import { Link } from "react-router-dom";
 import "../../styles/login.css";
 
-export const Login = () => {
-    const { store, actions } = useContext(Context);
-    const [email, setEmail] = useState("");
-	const [newPassword, setNewPassword] = useState("");
+export const ChangePassword = () => {
+    const { token } = useParams();
+    const { store } = useContext(Context);
+    const [newPassword, setNewPassword] = useState("");
     const forward = useNavigate();
-    const token = sessionStorage.getItem("token");
 
     // Sends the user to their page if logged in
     useEffect(() => {
-        if (store.token && store.token != "" && store.token != undefined) {
+        if (store.token && store.token !== "" && store.token !== undefined) {
             forward("/user-home");
         }
     }, [store.token, forward]);
 
     const handleClickSubmit = (event) => {
-		actions.handleLogin(email, password);
-        event.preventDefault()
-	};
+        event.preventDefault();
+        // Add logic to handle password change here
+    };
 
     return (
         <>

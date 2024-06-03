@@ -49,7 +49,7 @@ export const Login = () => {
                                 <Link className="text-decoration-none text-muted" to={"/signup"}>No account? Sign Up</Link>
                             </span>
                             <span>
-                                <Link className="text-decoration-none text-muted" to={"#"}>Forgot Password?</Link>
+                                <Link className="text-decoration-none text-muted" to={"/reset-request"}>Forgot Password?</Link>
                             </span>
                         </div>
                     </div>
