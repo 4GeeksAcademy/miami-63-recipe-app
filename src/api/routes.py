@@ -2,11 +2,11 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
-from api.models import db, User
+from api.models import db, User, User_Category
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 
@@ -51,6 +51,7 @@ def login():
     else:
         return jsonify({"msg": "Bad email or password"}), 401
 
+#Sign up user
 @api.route("/signup", methods=["POST"])
 def signup():
     email = request.json.get("email", None)
@@ -68,6 +69,18 @@ def signup():
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token)
 
+#Get all users
+@api.route('/users', methods=['GET'])
+def get_all_users():
+
+    try:
+        users = User.query.all()
+        serialized_users = [user.serialize() for user in users] 
+        return jsonify(serialized_users), 200
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500 
+
+#Reset email
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message(
@@ -169,3 +182,34 @@ def search():
     except requests.RequestException as e:
         print(f"Error fetching data from USDA API: {e}")
         return jsonify({"error": "Error fetching data from API."}), 500
+
+# Create category for user
+@api.route('/users/<int:user_id>/categories', methods=['POST'])
+def create_category(user_id):
+    category_name = request.json.get("category_name", None)
+    # user_id = request.json.get("user_id", None)
+
+    if category_name is None:
+        return jsonify({"msg": "Please fill out the required fields"}), 400
+
+    user_category = User_Category(user_id=user_id, category_name=category_name)
+    db.session.add(user_category)
+    db.session.commit()
+
+    return jsonify(user_category.serialize())
+
+#Get all of user's categories
+@api.route('/users/<int:user_id>/categories', methods=['GET'])
+@jwt_required()  # Requires a valid JWT token
+def get_all_categories(user_id):
+
+    try:
+        current_user_id = get_jwt_identity()
+        if current_user_id != user_id:
+            return jsonify({"error": "You are not authorized to perform this action"}), 403
+
+        categories = User_Category.query.filter_by(user_id=user_id).all()
+        serialized_categories = [category.serialize() for category in categories] 
+        return jsonify(serialized_categories), 200
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
