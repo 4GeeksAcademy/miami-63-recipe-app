@@ -1,15 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import {useNavigate} from 'react-router-dom';
-import { Link } from "react-router-dom";
 import "../../styles/login.css";
 
-export const Login = () => {
+export const ResetRequest = () => {
     const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
     const forward = useNavigate();
-    const token = sessionStorage.getItem("token");
+    const [hasError, setHasError] = useState(false);
 
     // Sends the user to their page if logged in
     useEffect(() => {
@@ -18,10 +16,18 @@ export const Login = () => {
         }
     }, [store.token, forward]);
 
-    const handleClickSubmit = (event) => {
-		actions.handleLogin(email, password);
-        event.preventDefault()
-	};
+    const handleClickSubmit = async (event) => {
+        event.preventDefault();
+        const success = await actions.handlePasswordReset(email);
+        if (success) {
+            forward("/login");
+            setHasError(false);
+        } else {
+            // Handle the error case (e.g., show an error message to the user)
+            console.error("Password reset request failed");
+            setHasError(true);
+        }
+    };
 
     return (
         <>
@@ -33,25 +39,17 @@ export const Login = () => {
                 </div>
                 <div className="col-7 d-flex justify-content-center">
                     <div className="col-6 login-form">
-                        <h2>Login with Email</h2>
-                        
+                        <h2>Reset Password Request</h2>
+                        <p className="form-text text-muted">Please type in your email and we'll send you and email with a link to reset your password.</p>
                         <form className="mb-3" onSubmit={handleClickSubmit}>
                             <div className="user-box">
                                 <input type="email" required value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                             </div>
-                            <div className="user-box">
-                                <input type="password" required value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-                            </div>
-                            <button type="submit" className="col-12 btn button-accent rounded-pill pt-3 pb-3">Login</button>
+                            {hasError &&
+                                <p className="form-text text-danger">There was an error please try again</p>
+                            }
+                            <button type="submit" className="col-12 btn button-accent rounded-pill pt-3 pb-3">Send</button>
                         </form>
-                        <div className="d-flex justify-content-between">
-                            <span>
-                                <Link className="text-decoration-none text-muted" to={"/signup"}>No account? Sign Up</Link>
-                            </span>
-                            <span>
-                                <Link className="text-decoration-none text-muted" to={"/reset-request"}>Forgot Password?</Link>
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>

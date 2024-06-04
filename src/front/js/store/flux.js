@@ -76,6 +76,53 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.removeItem("token")
 				setStore({ token: null });
 			},
+			handlePasswordReset: async (email) => {
+				try {
+					const response = await fetch(base + 'reset-password', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							"email": email
+						}),
+					});
+					const result = await response.json();
+					console.log("This came from the back-end", result);
+					if (response.ok) {
+						return true;
+					} else {
+						return false;
+					}
+				} catch (error) {
+					console.error('Error fetching data:', error);
+					return false;
+				}
+			},
+			handlePasswordChange: async (password, token) => {
+				try {
+					const response = await fetch(base + 'change-password', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							"password": password,
+							"token" : token
+						}),
+					});
+					const result = await response.json();
+					console.log("This came from the back-end", result);
+					if (response.ok) {
+						return true;
+					} else {
+						return false;
+					}
+				} catch (error) {
+					console.error('Error fetching data:', error);
+					return false;
+				}
+			},
 			localStorageToStore: () => {
 				const storedItems = JSON.parse(localStorage.getItem("items"));
 				if (storedItems) {

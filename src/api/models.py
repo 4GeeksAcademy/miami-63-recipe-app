@@ -1,12 +1,16 @@
 import os
 import sys
 
+from flask import Flask, current_app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, Table
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 db = SQLAlchemy()
+
+app = Flask(__name__)
 
 class User(db.Model):
     __tablename__ = "user"
@@ -14,6 +18,20 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), unique=False, nullable=False)
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except Exception as e:
+            print(f"Error verifying token: {e}")
+            return None
+        return User.query.get(user_id)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -31,21 +49,18 @@ class User_Recipe(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     recipe_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     recipe_title = db.Column(db.String, nullable=False)
-    # recipe_image = db.Column(db.String(2000), nullable=True)
-    # image_id = db.Column(db.Integer, db.ForeignKey("recipe_image.id"), nullable=False)
     description = db.Column(db.String(240), nullable=True)
     recipe_ingredients = db.Column(db.String, nullable=False)
     recipe_directions = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return f'<User_Recipe {self.recipe_id}'
+        return f'<User_Recipe {self.recipe_id}>'
    
     def serialize(self):
         return {
             "user_id": self.user_id,
             "recipe_id": self.recipe_id,
             "recipe_title": self.recipe_title,
-            "recipe_image": self.recipe_image,
             "description": self.description,
             "recipe_ingredients": self.recipe_ingredients,
             "recipe_directions": self.recipe_directions,
@@ -59,7 +74,7 @@ class User_Category(db.Model):
     category_name = db.Column(db.String(90), nullable=False)
 
     def __repr__(self):
-        return f'<User_Category {self.category_id}'
+        return f'<User_Category {self.category_id}>'
     
     def serialize(self):
         return {
@@ -84,7 +99,7 @@ class User_Recipe_Ingredient(db.Model):
     sugars_in_grams = db.Column(db.Float, nullable=True)
 
     def __repr__(self):
-        return f'<User_Recipe_Ingredient {self.user_recipe_ingredient_id}'
+        return f'<User_Recipe_Ingredient {self.user_recipe_ingredient_id}>'
     
     def serialize(self):
         return {
@@ -112,7 +127,7 @@ class User_Recipe_Ingredient(db.Model):
 #     mimetype = db.Column(db.Text, nullable=False)
 
 #     def __repr__(self):
-#         return f'<Recipe_Image {self.image_id}'
+#         return f'<Recipe_Image {self.image_id}>'
     
 #     def serialize(self):
 #         return {
