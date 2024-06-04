@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, Table
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer  # Correct serializer
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 db = SQLAlchemy()
 

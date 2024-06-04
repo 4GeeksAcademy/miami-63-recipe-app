@@ -75,7 +75,7 @@ def send_reset_email(user):
         sender='noreply@chefdojo.com',
         recipients=[user.email])
     msg.body = f'''To reset your password, please follow the link below:
-    {url_for('api.reset_token', token=token, _external=True)}
+    https://orange-broccoli-j4rpj6prpr2qpvq-3000.app.github.dev/change-password?token={token}
 
     If you did not make this request then simply ignore this email.
     '''
@@ -95,8 +95,9 @@ def reset_request():
         return jsonify({"msg": f"No user in the database with email {email}"}), 404
 
 # Endpoint for resetting the password with a token
-@api.route('/reset-password/<token>', methods=['POST'])
-def reset_token(token):
+@api.route('/change-password', methods=['POST'])
+def reset_token():
+    token = request.json.get("token")
     user = User.verify_reset_token(token)
     
     if user is None:

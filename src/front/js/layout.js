@@ -29,7 +29,7 @@ const LayoutContent = () => {
                 <Route element={<Signup />} path="/signup" />
                 <Route element={<Login />} path="/login" />
                 <Route element={<ResetRequest />} path="/reset-request" />
-                <Route element={<ChangePassword />} path="/change-password/:token" />
+                <Route element={<ChangePassword />} path="/change-password" />
                 <Route element={<h1>Not found!</h1>} />
             </Routes>
         </div>

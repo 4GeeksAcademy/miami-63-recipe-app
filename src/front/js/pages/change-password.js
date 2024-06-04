@@ -1,23 +1,25 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/login.css";
 
 export const ChangePassword = () => {
-    const { token } = useParams();
-    const { store } = useContext(Context);
-    const [newPassword, setNewPassword] = useState("");
+    const [ searchParams ] = useSearchParams();
+    const { store, actions } = useContext(Context);
+    const [password, setPassword] = useState("");
     const forward = useNavigate();
 
     // Sends the user to their page if logged in
     useEffect(() => {
-        if (store.token && store.token !== "" && store.token !== undefined) {
-            forward("/user-home");
+        const token = searchParams.get("token")
+        if (!token) {
+            forward("/");
         }
-    }, [store.token, forward]);
+    }, []);
 
-    const handleClickSubmit = (event) => {
+    const handleClickSubmit = (event, password) => {
         event.preventDefault();
+        actions.handlePasswordChange(password, searchParams.get("token"))
         // Add logic to handle password change here
     };
 
@@ -33,9 +35,9 @@ export const ChangePassword = () => {
                     <div className="col-6 login-form">
                         <h2>Set New Password</h2>
                         
-                        <form className="mb-3" onSubmit={handleClickSubmit}>
+                        <form className="mb-3" onSubmit={(e) => handleClickSubmit(e, password)}>
                             <div className="user-box">
-                                <input type="password" required value={newPassword} placeholder="Password" onChange={(e) => setNewPassword(e.target.value)} />
+                                <input type="password" required value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                             </div>
                             <button type="submit" className="col-12 btn button-accent rounded-pill pt-3 pb-3">Confirm New Password</button>
                         </form>
