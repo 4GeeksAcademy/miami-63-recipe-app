@@ -1,4 +1,4 @@
-const base = "https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/";
+const base = process.env.BACKEND_URL + "/api/";
 
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
