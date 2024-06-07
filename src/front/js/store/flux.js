@@ -1,4 +1,4 @@
-const base = "https://orange-broccoli-j4rpj6prpr2qpvq-3001.app.github.dev/api/";
+const base = process.env.BACKEND_URL + "/api/";
 
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
@@ -26,6 +26,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error('Error fetching data:', error);
 				}
 			},
+			itemClear: () => {
+                localStorage.removeItem("items");
+                setStore({ items: [] });
+            },
 			syncTokenFromSessionStore: () => {
 				const token = sessionStorage.getItem("token")
 				if (token && token != "" && token != undefined) setStore({ token: token });
@@ -73,8 +77,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			handleLogout: () => {
-				sessionStorage.removeItem("token")
+				sessionStorage.removeItem("token");
+				localStorage.removeItem("items");
 				setStore({ token: null });
+                setStore({ items: [] });
 			},
 			handlePasswordReset: async (email) => {
 				try {
