@@ -1,15 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import "../../styles/login.css";
 
 export const Login = () => {
     const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+    const [password, setPassword] = useState("");
     const forward = useNavigate();
-    const token = sessionStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
 
     // Sends the user to their page if logged in
     useEffect(() => {
@@ -19,9 +19,9 @@ export const Login = () => {
     }, [store.token, forward]);
 
     const handleClickSubmit = (event) => {
-		actions.handleLogin(email, password);
         event.preventDefault()
-	};
+        actions.handleLogin(email, password);
+    };
 
     return (
         <>
@@ -34,7 +34,7 @@ export const Login = () => {
                 <div className="col-7 d-flex justify-content-center">
                     <div className="col-6 login-form">
                         <h2>Login with Email</h2>
-                        
+
                         <form className="mb-3" onSubmit={handleClickSubmit}>
                             <div className="user-box">
                                 <input type="email" required value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} />

@@ -10,9 +10,11 @@ import { Signup } from "./pages/signup";
 import { Login } from "./pages/login";
 import { Single } from "./pages/single";
 import { CreateRecipe } from "./pages/CreateRecipe";
+import { RecipePage } from "./pages/RecipePage";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
+import { Footer } from "./component/footer";
 
 const LayoutContent = () => {
     const location = useLocation();
@@ -29,6 +31,7 @@ const LayoutContent = () => {
                 <Route element={<Signup />} path="/signup" />
                 <Route element={<Login />} path="/login" />
                 <Route element={<CreateRecipe />} path="/createrecipe" />
+                <Route element={<RecipePage />} path="recipepage/:id" />
                 <Route element={<h1>Not found!</h1>} />
             </Routes>
         </div>
@@ -41,23 +44,22 @@ const Layout = () => {
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
     return (
-        <BrowserRouter basename={basename}>
-            <LayoutContent />
-        </BrowserRouter>
-        // <div>
-        //     <BrowserRouter basename={basename}>
-        //         <Navbar />
-        //         <Routes>
-        //             <Route element={<Home />} path="/" />
-        //             <Route element={<Single />} path="/single/:theid" />
-        //             {/* <Route element={<Signup />} path="/signup" /> */}
-        //             {/* <Route element={<Login />} path="/login" /> */}
-        //             <Route element={<CreateRecipe />} path="/createrecipe" />
-        //             <Route element={<h1>Not found!</h1>} />
-        //         </Routes>
-        //         <Footer />
-        //     </BrowserRouter>
-        // </div>
+        <>
+            <BrowserRouter basename={basename}>
+                <LayoutContent />
+            </BrowserRouter>
+            {/* <LayoutContent /> */}
+            {/* <Navbar />
+                    <Routes>
+                        <Route element={<Home />} path="/" />
+                        <Route element={<Single />} path="/single/:theid" />
+                        <Route element={<Signup />} path="/signup" />
+                        <Route element={<Login />} path="/login" />
+                        <Route element={<CreateRecipe />} path="/createrecipe" />
+                        <Route element={<h1>Not found!</h1>} />
+                    </Routes>
+                    <Footer /> */}
+        </>
     );
 };
 

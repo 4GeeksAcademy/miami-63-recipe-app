@@ -31,8 +31,6 @@ class User_Recipe(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     recipe_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     recipe_title = db.Column(db.String, nullable=False)
-    recipe_image = db.Column(db.String(2000), nullable=True)
-    image_id = db.Column(db.Integer, db.ForeignKey("recipe_image.id"), nullable=False)
     description = db.Column(db.String(240), nullable=True)
     recipe_ingredients = db.Column(db.String, nullable=False)
     recipe_directions = db.Column(db.String, nullable=False)
@@ -46,7 +44,6 @@ class User_Recipe(db.Model):
             "user_id": self.user_id,
             "recipe_id": self.recipe_id,
             "recipe_title": self.recipe_title,
-            "recipe_image": self.recipe_image,
             "description": self.description,
             "recipe_ingredients": self.recipe_ingredients,
             "recipe_directions": self.recipe_directions,

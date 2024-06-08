@@ -131,18 +131,38 @@ def search():
         print(f"Error fetching data from USDA API: {e}")
         return jsonify({"error": "Error fetching data from API."}), 500
 
-@api.route('/createrecipe', methods=['POST'])
+@api.route('/recipes', methods=['POST'])
 @jwt_required()
 def create_recipe():
+    print("test message")
     user_email = get_jwt_identity()
     body = request.get_json()
     user = User.query.filter_by(email=user_email).first()
     new_recipe = User_Recipe(user_id=user.id, recipe_title=body['title'], description=body['description'], recipe_ingredients=body['ingredients'], recipe_directions=body['directions'])
     db.session.add(new_recipe)
     db.session.commit()
-    return jsonify("recipe successfully created")
+    current_recipe = User_Recipe.query.filter_by(user_id = user.id, recipe_title=body['title']).first()
 
-@api.route('/createrecipe', methods=['GET'])
+    print(user)
+    print(current_recipe)
+    print(body)
+    new_recipe_ingredients = User_Recipe_Ingredient(
+        user_id = user.id,
+        recipe_id = current_recipe.recipe_id,
+        calories = body['nutrition_facts']['calories'], 
+        protein_in_grams = body['nutrition_facts']['protein_in_grams'],
+        carbohydrates_in_grams = body['nutrition_facts']['carbohydrates_in_grams'],
+        fats_in_grams = body['nutrition_facts']['fats_in_grams'],
+        sodium_in_mg = body['nutrition_facts']['sodium_in_mg'],
+        cholestorol_in_mg = body['nutrition_facts']['cholestorol_in_mg'], 
+        fiber_in_grams = body['nutrition_facts']['fiber_in_grams'], 
+        sugars_in_grams = body['nutrition_facts']['sugars_in_grams'])  
+    db.session.add(new_recipe_ingredients)
+    db.session.commit()
+    return jsonify(current_recipe.serialize())
+
+# get ALL recipes
+@api.route('/recipes', methods=['GET'])
 @jwt_required()
 def get_recipe():
     user_email = get_jwt_identity()
@@ -150,7 +170,7 @@ def get_recipe():
     recipes = User_Recipe.query.filter_by(user_id=user.id).all()
     return jsonify(recipes)
 
-@api.route('/createrecipe/<int:id>', methods=['DELETE'])
+@api.route('/recipes/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_recipe(id):
     recipe = User_Recipe.query.filter_by(recipe_id=id).first()
