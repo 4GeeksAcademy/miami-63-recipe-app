@@ -1,3 +1,4 @@
+
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
@@ -7,12 +8,14 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { CSSTransition } from 'react-transition-group';
+
 import "../../styles/user-home.css";
 
 export const UserHome = () => {
     const { store, actions } = useContext(Context);
-    const [search, setSearch] = useState("");
+
     const forward = useNavigate();
+    const [search, setSearch] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [categoryName, setCategoryName] = useState("");
 
@@ -21,6 +24,7 @@ export const UserHome = () => {
         if (store.token == null) {
             forward("/");
         }
+
         if (store.items.length === 0) {
             setSearch("");
         }
@@ -70,27 +74,33 @@ export const UserHome = () => {
                     <button className="search-query-submit" type="submit" onClick={handleSearch}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            
                         </svg>
                     </button>
                 </div>
             </div>
 
             <div className="container">
+
                 <CSSTransition in={store.items.length > 0} timeout={300} classNames="slide" unmountOnExit>
+
                     <div className="col-12 scrollable-section mb-5">
                         <ul className="list-group list-group-flush">
                             {store.items.map((item, index) => (
                                 <li className="list-group-item d-flex justify-content-between align-items-center" key={index}>
+
                                     <span className="col-8">
                                         <Link to={`/item-detail/${item.id}`} className="link-hover">{item.name}</Link>
                                     </span>
                                     {/* <span>
                                         <button type="button" className="btn button-accent rounded-pill">+ Add Ingredient</button>
                                     </span> */}
+
                                 </li>
                             ))}
                         </ul>
                     </div>
+
                 </CSSTransition>
             </div>
 

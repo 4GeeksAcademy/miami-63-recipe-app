@@ -1,12 +1,14 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
+
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
-from api.models import db, User, User_Category
+from api.models import db, User, User_Recipe, User_Category, User_Recipe_Ingredient
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 
@@ -23,6 +25,31 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+
+# Define a dictionary to map original nutrient names to custom property names
+custom_property_names = {
+    "Carbohydrate, by difference": "carbohydrates",
+    "Total lipid (fat)": "fat",
+    "Protein": "protein",
+    "Energy": "calories",
+    "Sugars, total including NLEA": "sugars",
+    "Fiber, total dietary": "fiber",
+    "Sodium, Na": "sodium",
+    "Cholesterol": "cholesterol"
+}
+
+# Define a dictionary to map original nutrient names to custom property names
+custom_property_names = {
+    "Carbohydrate, by difference": "carbohydrates",
+    "Total lipid (fat)": "fat",
+    "Protein": "protein",
+    "Energy": "calories",
+    "Sugars, total including NLEA": "sugars",
+    "Fiber, total dietary": "fiber",
+    "Sodium, Na": "sodium",
+    "Cholesterol": "cholesterol"
+}
+
 # Ensure app configurations are correctly set up
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'ZESJxyxt7rzzmrFNRVumV3VnzmSuJ1W5')
 app.config['MAIL_SERVER'] = "smtp.gmail.com"
@@ -32,6 +59,7 @@ app.config['MAIL_USERNAME'] = "repartomoro@gmail.com"
 app.config['MAIL_PASSWORD'] =  "gdwu ojlq akev qdzg"
 
 mail = Mail(app)
+
 
 # Create a route to authenticate your users and return JWTs. The
 # create_access_token() function is used to actually generate the JWT.
@@ -47,11 +75,13 @@ def login():
     
     if user and bcrypt.check_password_hash(user.password, password):
         access_token = create_access_token(identity=email)
+
         return jsonify(access_token=access_token)
     else:
         return jsonify({"msg": "Bad email or password"}), 401
 
 #Sign up user
+
 @api.route("/signup", methods=["POST"])
 def signup():
     email = request.json.get("email", None)
@@ -61,6 +91,21 @@ def signup():
         return jsonify({"msg": "Please fill out the required fields"}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+
+    user = User(email=email, password=hashed_password)
+    db.session.add(user)
+    db.session.commit()
+    
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token)
+
+# Endpoint for ingredient search feature
+@api.route('/search', methods=['POST'])
+def search():
+    print("Request received")
+    searchUrl="https://api.nal.usda.gov/fdc/v1/foods/search"
+ 
 
     user = User(email=email, password=hashed_password)
     db.session.add(user)
@@ -144,6 +189,7 @@ def search():
 
     search_url = "https://api.nal.usda.gov/fdc/v1/foods/search"
 
+
     payload = {
         "query": request.json["query"]
     }
@@ -156,16 +202,19 @@ def search():
 
     try:
         response = requests.post(search_url, headers=headers, json=payload)
+
         response_data = response.json()
 
         # Flatten the payload to only include desired fields
         if 'foods' in response_data:
+
             flattened_foods = []
             
             for food in response_data['foods']:
                 flattened_food = {
                     "name": food.get("description"),
                     "id": food.get("fdcId")
+
                 }
 
                 for foodNutrient in food["foodNutrients"]:
@@ -177,11 +226,60 @@ def search():
 
                 flattened_foods.append(flattened_food)
             
+
             return jsonify(flattened_foods)
     
     except requests.RequestException as e:
         print(f"Error fetching data from USDA API: {e}")
         return jsonify({"error": "Error fetching data from API."}), 500
+
+
+@api.route('/recipes', methods=['POST'])
+@jwt_required()
+def create_recipe():
+    print("test message")
+    user_email = get_jwt_identity()
+    body = request.get_json()
+    user = User.query.filter_by(email=user_email).first()
+    new_recipe = User_Recipe(user_id=user.id, recipe_title=body['title'], description=body['description'], recipe_ingredients=body['ingredients'], recipe_directions=body['directions'])
+    db.session.add(new_recipe)
+    db.session.commit()
+    current_recipe = User_Recipe.query.filter_by(user_id = user.id, recipe_title=body['title']).first()
+
+    print(user)
+    print(current_recipe)
+    print(body)
+    new_recipe_ingredients = User_Recipe_Ingredient(
+        user_id = user.id,
+        recipe_id = current_recipe.recipe_id,
+        calories = body['nutrition_facts']['calories'], 
+        protein_in_grams = body['nutrition_facts']['protein_in_grams'],
+        carbohydrates_in_grams = body['nutrition_facts']['carbohydrates_in_grams'],
+        fats_in_grams = body['nutrition_facts']['fats_in_grams'],
+        sodium_in_mg = body['nutrition_facts']['sodium_in_mg'],
+        cholestorol_in_mg = body['nutrition_facts']['cholestorol_in_mg'], 
+        fiber_in_grams = body['nutrition_facts']['fiber_in_grams'], 
+        sugars_in_grams = body['nutrition_facts']['sugars_in_grams'])  
+    db.session.add(new_recipe_ingredients)
+    db.session.commit()
+    return jsonify(current_recipe.serialize())
+
+# get ALL recipes
+@api.route('/recipes', methods=['GET'])
+@jwt_required()
+def get_recipe():
+    user_email = get_jwt_identity()
+    user = User.query.filter_by(email=user_email).first()
+    recipes = User_Recipe.query.filter_by(user_id=user.id).all()
+    return jsonify(recipes)
+
+@api.route('/recipes/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_recipe(id):
+    recipe = User_Recipe.query.filter_by(recipe_id=id).first()
+    db.session.delete(recipe)
+    db.session.commit()
+    return jsonify("recipe deleted")
 
 # Create category for user
 @api.route('/users/<int:user_id>/categories', methods=['POST'])

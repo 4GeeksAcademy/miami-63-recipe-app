@@ -1,13 +1,16 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
+
 import {useNavigate} from 'react-router-dom';
+
 import { Link } from "react-router-dom";
 import "../../styles/login.css";
 
 export const Login = () => {
     const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+
+	  const [password, setPassword] = useState("");
     const forward = useNavigate();
     const token = sessionStorage.getItem("token");
 
@@ -19,6 +22,7 @@ export const Login = () => {
     }, [store.token, forward]);
 
     const handleClickSubmit = (event) => {
+
 		actions.handleLogin(email, password);
         event.preventDefault()
 	};
@@ -34,7 +38,7 @@ export const Login = () => {
                 <div className="col-7 d-flex justify-content-center">
                     <div className="col-6 login-form">
                         <h2>Login with Email</h2>
-                        
+
                         <form className="mb-3" onSubmit={handleClickSubmit}>
                             <div className="user-box">
                                 <input type="email" required value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
@@ -49,7 +53,9 @@ export const Login = () => {
                                 <Link className="text-decoration-none text-muted" to={"/signup"}>No account? Sign Up</Link>
                             </span>
                             <span>
+
                                 <Link className="text-decoration-none text-muted" to={"/reset-request"}>Forgot Password?</Link>
+
                             </span>
                         </div>
                     </div>

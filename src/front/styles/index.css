@@ -35,4 +35,13 @@ body {
     height: 25vw;
     overflow-x: hidden;
     overflow-y: auto;
+
+}
+
+.recipe_button {
+    border: 2px solid black;
+    border-radius: 10px;
+    font-size: 20px;
+    margin-left: 300px;
+    margin-right: 300px;
 }
