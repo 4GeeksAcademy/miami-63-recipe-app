@@ -47,7 +47,7 @@ def login():
     
     if user and bcrypt.check_password_hash(user.password, password):
         access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token)
+        return jsonify(access_token=access_token, user=user.serialize())
     else:
         return jsonify({"msg": "Bad email or password"}), 401
 
@@ -184,11 +184,12 @@ def search():
         return jsonify({"error": "Error fetching data from API."}), 500
 
 # Create category for user
-@api.route('/users/<int:user_id>/categories', methods=['POST'])
+@api.route('/users/<int:user_id>/category', methods=['POST'])
 def create_category(user_id):
     category_name = request.json.get("category_name", None)
-    # user_id = request.json.get("user_id", None)
-
+    # current_user_id = get_jwt_identity()
+    # if current_user_id != user_id:
+    #     return jsonify({"error": "You are not authorized to perform this action"}), 403
     if category_name is None:
         return jsonify({"msg": "Please fill out the required fields"}), 400
 
@@ -200,13 +201,13 @@ def create_category(user_id):
 
 #Get all of user's categories
 @api.route('/users/<int:user_id>/categories', methods=['GET'])
-@jwt_required()  # Requires a valid JWT token
+# @jwt_required()  # Requires a valid JWT token
 def get_all_categories(user_id):
 
     try:
-        current_user_id = get_jwt_identity()
-        if current_user_id != user_id:
-            return jsonify({"error": "You are not authorized to perform this action"}), 403
+        # current_user_id = get_jwt_identity()
+        # if current_user_id != user_id:
+        #     return jsonify({"error": "You are not authorized to perform this action"}), 403
 
         categories = User_Category.query.filter_by(user_id=user_id).all()
         serialized_categories = [category.serialize() for category in categories] 

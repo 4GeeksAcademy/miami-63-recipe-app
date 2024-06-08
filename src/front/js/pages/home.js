@@ -12,7 +12,7 @@ export const Home = () => {
 
     // Sends the user to their page if logged in
     useEffect(() => {
-        if (store.token && store.token != "" && store.token != undefined) {
+        if (store.token && store.token != "" && store.token && store.user != undefined) {
             forward("/user-home");
         }
     }, [store.token, forward]);

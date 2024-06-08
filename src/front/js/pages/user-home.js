@@ -15,13 +15,24 @@ export const UserHome = () => {
     const forward = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [categoryName, setCategoryName] = useState("");
-
+    const [ categories, setCategories ] = useState(null)
+    
     // Sends the user to the main home page if not logged in
     useEffect(() => {
-        // if (store.token == null) {
-        //     forward("/");
-        // }
-    }, [store.token, forward]);
+        if (!store.token || store.user == null) {
+            forward("/");
+        }
+        const getUserCategories = async() => {
+            const userCategories = await actions.getUserCategories()
+            if(userCategories) {
+                console.log("Got the categories!", userCategories)
+                setCategories(userCategories)
+            }
+        }
+        getUserCategories()
+        console.log("User category state", categories)
+    }, [store.token]);
+
 
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
@@ -29,9 +40,10 @@ export const UserHome = () => {
     const handleCategoryNameChange = (e) => {
         setCategoryName(e.target.value); // Update category name when input changes
     };
-    const handleCreateCategory = () => {
+    const handleCreateCategory = async() => {
         // Handle saving the category name (e.g., send it to an API or store it in state)
         console.log("Category name:", categoryName);
+        await actions.createCategory(categoryName)
         // You can add your logic here to save the category name
         // For now, I'm just logging it to the console
     };

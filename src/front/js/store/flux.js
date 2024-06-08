@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			token: null,
+			user: null,
 			items: []
 		},
 		actions: {
@@ -45,7 +46,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const result = await response.json();
 					console.log("This came from the back-end", result);
 					sessionStorage.setItem("token", result.access_token);
-					setStore({ token: result.access_token });
+					setStore({ token: result.access_token, user: result.user });
 					return true;
 				} catch (error) {
 					console.error('Error fetching data:', error);
@@ -129,7 +130,42 @@ const getState = ({ getStore, getActions, setStore }) => {
                     setStore({ items: storedItems });
                 };
 				console.log(getStore().items)
-			}
+			},
+			createCategory: async (category)=>{
+				const store = getStore();
+				console.log("STORE", store)
+				try {
+					const resp = await fetch(base + `users/${store.user.id}/category`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({category_name: category})
+					})
+					const data = await resp.json()
+					console.log("Data after creating category", data)
+				} catch(error) {
+					console.log("Error creating category", error)
+					throw new Error
+				}
+			},
+			getUserCategories: async () => {
+				const store = getStore();
+				try {
+					const resp = await fetch(base + `users/${store.user.id}/categories`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+						}
+					})
+					const data = await resp.json()
+					console.log("Data after getting categories", data)
+					return data
+				} catch(error) {
+					console.log("Error getting categories", error)
+					throw new Error
+				}
+			},
 		}
 	};
 };
