@@ -22,6 +22,9 @@ requests = "*"
 flask-jwt-extended = "*"
 flask-bcrypt = "*"
 
+itsdangerous = "==2.0.0"
+flask-mail = "*"
+
 [requires]
 python_version = "3.10"
 
