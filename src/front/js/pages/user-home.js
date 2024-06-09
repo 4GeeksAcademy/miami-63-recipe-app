@@ -26,6 +26,11 @@ export const UserHome = () => {
         }
     }, [store.token, store.items, forward]);
 
+    // Fetch categories from the backend when component mounts
+    useEffect(() => {
+        actions.fetchUserCategories();
+    }, []);
+
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
     };
@@ -94,8 +99,19 @@ export const UserHome = () => {
                 </CSSTransition>
             </div>
 
-            <div className="container d-flex justify-content-end mb-4">
-                <button className="btn button-accent rounded-pill ps-4 pe-4" onClick={toggleModal}>Create Recipe Board</button>
+            <div className="container mb-4">
+                <div className="d-flex justify-content-end mb-4">
+                    <button className="btn button-accent rounded-pill ps-4 pe-4" onClick={toggleModal}>Create Recipe Board</button>
+                </div>
+                <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+                    {store.categories.map((category, index) => (
+                        <div key={index} className="col">
+                            <div className="category-box d-flex justify-content-center align-items-center">
+                                {category.category_name}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Modal Implementation */}
@@ -106,13 +122,7 @@ export const UserHome = () => {
                 <Modal.Body>
                     <Form>
                         <Form.Group controlId="formCategoryName">
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Name"
-                                value={categoryName} // Bind input value to categoryName state
-                                onChange={handleCategoryNameChange} // Handle input change
-                            />
+                            <Form.Control type="text" placeholder="Category Name" value={categoryName} onChange={handleCategoryNameChange} />
                         </Form.Group>
                         <Button variant="danger" className="btn-danger" style={{ marginTop: '20px' }} onClick={handleCreateCategory}>
                             Create
@@ -120,9 +130,7 @@ export const UserHome = () => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={toggleModal}>
-                        Close
-                    </Button>
+                    <Button variant="secondary" onClick={toggleModal}>Close</Button>
                 </Modal.Footer>
             </Modal>
         </>

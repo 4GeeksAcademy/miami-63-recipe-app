@@ -47,7 +47,7 @@ def login():
     
     if user and bcrypt.check_password_hash(user.password, password):
         access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token)
+        return jsonify(access_token=access_token, user_id=user.id)
     else:
         return jsonify({"msg": "Bad email or password"}), 401
 
@@ -183,33 +183,40 @@ def search():
         print(f"Error fetching data from USDA API: {e}")
         return jsonify({"error": "Error fetching data from API."}), 500
 
-# Create category for user
-@api.route('/users/<int:user_id>/categories', methods=['POST'])
-def create_category(user_id):
-    category_name = request.json.get("category_name", None)
-    # user_id = request.json.get("user_id", None)
+# Create and get category for user
+@api.route('/categories/<int:user_id>', methods=['POST', 'GET'])
+def handle_categories(user_id):
+    if request.method == 'POST':
+        category_name = request.json.get("category_name", None)
 
-    if category_name is None:
-        return jsonify({"msg": "Please fill out the required fields"}), 400
+        if category_name is None:
+            return jsonify({"msg": "Please fill out the required fields"}), 400
 
-    user_category = User_Category(user_id=user_id, category_name=category_name)
-    db.session.add(user_category)
+        user_category = User_Category(user_id=user_id, category_name=category_name)
+        db.session.add(user_category)
+        db.session.commit()
+
+        return jsonify(user_category.serialize()), 201
+
+    elif request.method == 'GET':
+        user_categories = User_Category.query.filter_by(user_id=user_id).all()
+
+        if not user_categories:
+            return jsonify({"msg": "There are no categories for this user"}), 404
+
+        return jsonify([category.serialize() for category in user_categories]), 200
+
+    return jsonify({"msg": "Method not allowed"}), 405
+
+# Delete user category
+@api.route('/categories/<int:user_id>/<int:category_id>', methods=['DELETE'])
+def delete_categories(user_id, category_id):
+    user_category = User_Category.query.filter_by(user_id=user_id, category_id=category_id).first()
+
+    if user_category is None:
+        return jsonify({"msg": "Category not found"}), 40
+    
+    db.session.delete(user_category)
     db.session.commit()
 
-    return jsonify(user_category.serialize())
-
-#Get all of user's categories
-@api.route('/users/<int:user_id>/categories', methods=['GET'])
-@jwt_required()  # Requires a valid JWT token
-def get_all_categories(user_id):
-
-    try:
-        current_user_id = get_jwt_identity()
-        if current_user_id != user_id:
-            return jsonify({"error": "You are not authorized to perform this action"}), 403
-
-        categories = User_Category.query.filter_by(user_id=user_id).all()
-        serialized_categories = [category.serialize() for category in categories] 
-        return jsonify(serialized_categories), 200
-    except Exception as e:
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    return jsonify({"msg": "Category deleted successfully"}), 200

@@ -66,9 +66,17 @@ a {
     color: white;
 }
 
+.category-box {
+    color: white;
+    text-align: center;
+    border-radius: 50px;
+    background: var(--turquoise);
+    padding: 20px;
+    height: 200px;
+}
+
 
 /* Slide Animation */
-
 .slide-enter {
     max-height: 0;
     opacity: 0;

@@ -114,26 +114,3 @@ class User_Recipe_Ingredient(db.Model):
             "fiber_in_grams": self.fiber_in_grams,
             "sugars_in_grams": self.sugars_in_grams
         }
-
-
-
-
-# class Recipe_Image(db.model):
-#     __tablename__ = "recipe_image"
-
-#     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-#     image_id = db.Column(db.Integer, primary_key=True)
-#     image = db.Column(db.Text, unique=True, nullable=True)
-#     mimetype = db.Column(db.Text, nullable=False)
-
-#     def __repr__(self):
-#         return f'<Recipe_Image {self.image_id}>'
-    
-#     def serialize(self):
-#         return {
-#             "user_id": self.user_id,
-#             "image_id": self.image_id,
-#             "image": self.image,
-#             "name": self.name,
-#             "mimetype": self.mimetype
-#         }

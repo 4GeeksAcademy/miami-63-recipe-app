@@ -4,7 +4,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			token: null,
-			items: []
+			items: [],
+			user: null,
+            categories: []
 		},
 		actions: {
 			itemSearch: async (search) => {
@@ -34,6 +36,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const token = sessionStorage.getItem("token")
 				if (token && token != "" && token != undefined) setStore({ token: token });
 			},
+			syncUserIdSessionStore: () => {
+				const user = sessionStorage.getItem("user")
+				if (user && user != null && user != undefined) setStore({ user: user });
+			},
 			handleLogin: async (email, password) => {
 				try {
 					const response = await fetch(base + 'login', {
@@ -49,7 +55,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const result = await response.json();
 					console.log("This came from the back-end", result);
 					sessionStorage.setItem("token", result.access_token);
+					sessionStorage.setItem("user", result.user_id);
 					setStore({ token: result.access_token });
+					setStore({ user: result.user_id });
 					return true;
 				} catch (error) {
 					console.error('Error fetching data:', error);
@@ -70,7 +78,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const result = await response.json();
 					console.log("This came from the back-end", result);
 					sessionStorage.setItem("token", result.access_token);
+					sessionStorage.setItem("user", result.user_id);
 					setStore({ token: result.access_token });
+					setStore({ user: result.user_id });
 					return true;
 				} catch (error) {
 					console.error('Error fetching data:', error);
@@ -78,9 +88,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			handleLogout: () => {
 				sessionStorage.removeItem("token");
+				sessionStorage.removeItem("user");
 				localStorage.removeItem("items");
 				setStore({ token: null });
                 setStore({ items: [] });
+				setStore({ user: null });
 			},
 			handlePasswordReset: async (email) => {
 				try {
@@ -135,7 +147,23 @@ const getState = ({ getStore, getActions, setStore }) => {
                     setStore({ items: storedItems });
                 };
 				console.log(getStore().items)
-			}
+			},
+			fetchUserCategories: async () => {
+                try {
+                    const response = await fetch(base + 'categories/' + getStore().user, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${getStore().token}` // Pass the token for authenticated requests
+                        }
+                    });
+                    const result = await response.json();
+					console.log(result)
+                    setStore({ categories: result });
+                } catch (error) {
+                    console.error('Error fetching user categories:', error);
+                }
+            }
 		}
 	};
 };
