@@ -14,7 +14,8 @@ export const UserHome = () => {
     const [search, setSearch] = useState("");
     const forward = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [categoryName, setCategoryName] = useState("");
+    const [boardName, setBoardName] = useState("");
+    const backendURL = process.env.BACKEND_URL;
 
     // Sends the user to the main home page if not logged in
     useEffect(() => {
@@ -35,15 +36,43 @@ export const UserHome = () => {
         setIsModalOpen(!isModalOpen);
     };
 
-    const handleCategoryNameChange = (e) => {
-        setCategoryName(e.target.value); // Update category name when input changes
+    const handleCreateBoard = async () => {
+        try {
+            const response = await fetch(`${backendURL}/api/categories/${store.user}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${store.token}`
+                },
+                body: JSON.stringify({ category_name: boardName })
+            });
+            const result = await response.json();
+            setIsModalOpen(!isModalOpen);
+            actions.fetchUserCategories(); // Refresh the state
+            setBoardName("");
+            console.log(result);
+        } catch (error) {
+            console.error('Error creating board:', error);
+        }
     };
 
-    const handleCreateCategory = () => {
-        // Handle saving the category name (e.g., send it to an API or store it in state)
-        console.log("Category name:", categoryName);
-        // You can add your logic here to save the category name
-        // For now, I'm just logging it to the console
+    const handleDeleteBoard = async (event, index) => {
+        event.preventDefault();
+        try {
+            const response = await fetch(`${backendURL}/api/categories/${store.user}/${store.categories[index].category_id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${store.token}`
+                },
+            });
+            const result = await response.json();
+            actions.fetchUserCategories(); // Refresh the state
+            console.log(result);
+        } catch (error) {
+            console.error('Error deleting board:', error);
+        }
+        console.log(store.categories[index]);
     };
 
     const handleSearch = () => {
@@ -106,9 +135,16 @@ export const UserHome = () => {
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
                     {store.categories.map((category, index) => (
                         <div key={index} className="col">
-                            <div className="category-box d-flex justify-content-center align-items-center">
-                                {category.category_name}
-                            </div>
+                            <Link to={`/recipe-board`}>
+                                <div className="category-box d-flex justify-content-center align-items-center">
+                                    {category.category_name}
+                                    <div className="delete-board" onClick={(event) => handleDeleteBoard(event, index)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
+                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </Link>
                         </div>
                     ))}
                 </div>
@@ -117,21 +153,18 @@ export const UserHome = () => {
             {/* Modal Implementation */}
             <Modal show={isModalOpen} onHide={toggleModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Create Category</Modal.Title>
+                    <Modal.Title>Create Recipe Board</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group controlId="formCategoryName">
-                            <Form.Control type="text" placeholder="Category Name" value={categoryName} onChange={handleCategoryNameChange} />
+                            <Form.Control type="text" placeholder="Board Name" value={boardName} onChange={(e) => setBoardName(e.target.value)} />
                         </Form.Group>
-                        <Button variant="danger" className="btn-danger" style={{ marginTop: '20px' }} onClick={handleCreateCategory}>
+                        <Button variant="danger" className="btn-danger" style={{ marginTop: '20px' }} onClick={handleCreateBoard}>
                             Create
                         </Button>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={toggleModal}>Close</Button>
-                </Modal.Footer>
             </Modal>
         </>
     );
