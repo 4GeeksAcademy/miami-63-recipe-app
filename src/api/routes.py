@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
-from api.models import db, User, User_Category
+from api.models import db, User, User_Category, User_Recipe, User_Recipe_Ingredient
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -220,3 +220,66 @@ def delete_categories(user_id, category_id):
     db.session.commit()
 
     return jsonify({"msg": "Category deleted successfully"}), 200
+
+@api.route('/recipes', methods=['POST'])
+@jwt_required()
+def create_recipe():
+    print("test message")
+    user_email = get_jwt_identity()
+    body = request.get_json()
+    user = User.query.filter_by(email=user_email).first()
+    new_recipe = User_Recipe(user_id=user.id, recipe_title=body['title'], description=body['description'], recipe_ingredients=body['ingredients'], recipe_directions=body['directions'])
+    db.session.add(new_recipe)
+    db.session.commit()
+    current_recipe = User_Recipe.query.filter_by(user_id = user.id, recipe_title=body['title']).first()
+
+    print(user)
+    print(current_recipe)
+    print(body)
+    new_recipe_ingredients = User_Recipe_Ingredient(
+        user_id = user.id,
+        recipe_id = current_recipe.recipe_id,
+        calories = body['nutrition_facts']['calories'], 
+        protein_in_grams = body['nutrition_facts']['protein_in_grams'],
+        carbohydrates_in_grams = body['nutrition_facts']['carbohydrates_in_grams'],
+        fats_in_grams = body['nutrition_facts']['fats_in_grams'],
+        sodium_in_mg = body['nutrition_facts']['sodium_in_mg'],
+        cholestorol_in_mg = body['nutrition_facts']['cholestorol_in_mg'], 
+        fiber_in_grams = body['nutrition_facts']['fiber_in_grams'], 
+        sugars_in_grams = body['nutrition_facts']['sugars_in_grams'])  
+    db.session.add(new_recipe_ingredients)
+    db.session.commit()
+    return jsonify(current_recipe.serialize())
+
+# get ALL recipes
+@api.route('/recipes', methods=['GET'])
+@jwt_required()
+def get_recipe():
+    user_email = get_jwt_identity()
+    user = User.query.filter_by(email=user_email).first()
+    recipes = User_Recipe.query.filter_by(user_id=user.id).all()
+    return jsonify(recipes)
+
+@api.route('/recipes/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_recipe(id):
+    recipe = User_Recipe.query.filter_by(recipe_id=id).first()
+    db.session.delete(recipe)
+    db.session.commit()
+    return jsonify("recipe deleted")
+
+#Get all of user's categories
+@api.route('/users/<int:user_id>/categories', methods=['GET'])
+@jwt_required()  # Requires a valid JWT token
+def get_all_categories(user_id):
+
+    try:
+        current_user_id = get_jwt_identity()
+        if current_user_id != user_id:
+            return jsonify({"error": "You are not authorized to perform this action"}), 403
+
+        categories = User_Category.query.filter_by(user_id=user_id).all()
+        serialized_categories = [category.serialize() for category in categories] 
+        return jsonify(serialized_categories), 200
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
