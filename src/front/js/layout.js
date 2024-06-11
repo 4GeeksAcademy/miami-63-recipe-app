@@ -5,6 +5,7 @@ import { BackendURL } from "./component/backendURL";
 import { Home } from "./pages/home";
 import { UserHome } from "./pages/user-home";
 import { ItemDetail } from "./pages/item-detail";
+import { RecipeBoard } from "./pages/recipe-board";
 import { Search } from "./pages/search";
 import { Signup } from "./pages/signup";
 import { Login } from "./pages/login";
@@ -25,6 +26,7 @@ const LayoutContent = () => {
                 <Route element={<Home />} path="/" />
                 <Route element={<UserHome />} path="/user-home" />
                 <Route element={<ItemDetail />} path="/item-detail/:id" />
+                <Route element={<RecipeBoard />} path="/recipe-board" />
                 <Route element={<Search />} path="/search" />
                 <Route element={<Signup />} path="/signup" />
                 <Route element={<Login />} path="/login" />

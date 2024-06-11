@@ -66,9 +66,48 @@ a {
     color: white;
 }
 
+.category-box {
+    color: white;
+    text-align: center;
+    border-radius: 50px;
+    background: var(--turquoise);
+    padding: 20px;
+    height: 200px;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.category-box:hover {
+    background: var(--dark);
+}
+
+.category-box .delete-board {
+    color: #777777;
+    border-radius: 100%;
+    background: #ffffff;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    transition: background-color 0.3s ease;
+    display: none;
+}
+
+.category-box:hover .delete-board {
+    display: flex;
+}
+
+.category-box:hover .delete-board:hover {
+    color: white;
+    background: var(--red);
+}
 
 /* Slide Animation */
-
 .slide-enter {
     max-height: 0;
     opacity: 0;
