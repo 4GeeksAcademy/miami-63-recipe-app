@@ -5,7 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			token: null,
 			items: [],
-			users: null,
+			user: null,
 			recipes: [],
 			categories: []
 		},
@@ -151,6 +151,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			fetchUserCategories: async () => {
                 try {
+					console.log({user:getStore().user})
                     const response = await fetch(base + 'categories/' + getStore().user, {
                         method: 'GET',
                         headers: {
@@ -159,8 +160,13 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                     });
                     const result = await response.json();
+					if (result.data) {
+						setStore({ categories: result.data });
+					}
+					else {
+						setStore({ categories: [] });
+					}
 					console.log(result)
-                    setStore({ categories: result });
                 } catch (error) {
                     console.error('Error fetching user categories:', error);
                 }

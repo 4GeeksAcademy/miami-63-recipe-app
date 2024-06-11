@@ -186,27 +186,36 @@ def search():
 # Create and get category for user
 @api.route('/categories/<int:user_id>', methods=['POST', 'GET'])
 def handle_categories(user_id):
+    data = None
+    status = 200
+    message = ""
+
     if request.method == 'POST':
         category_name = request.json.get("category_name", None)
 
         if category_name is None:
-            return jsonify({"msg": "Please fill out the required fields"}), 400
+            status = 400
+            message = "please fill out the required fields"
+        else:
+            user_category = User_Category(user_id=user_id, category_name=category_name)
+            db.session.add(user_category)
+            db.session.commit()
 
-        user_category = User_Category(user_id=user_id, category_name=category_name)
-        db.session.add(user_category)
-        db.session.commit()
-
-        return jsonify(user_category.serialize()), 201
+            data = category_name
+            status = 200
+            message = "successfully created category"
 
     elif request.method == 'GET':
         user_categories = User_Category.query.filter_by(user_id=user_id).all()
 
         if not user_categories:
-            return jsonify({"msg": "There are no categories for this user"}), 404
-
-        return jsonify([category.serialize() for category in user_categories]), 200
-
-    return jsonify({"msg": "Method not allowed"}), 405
+            status = 404
+            message = "there are no categories for this user"
+        else:
+            data = [category.serialize() for category in user_categories]
+            status = 200
+            message = "successfully fetched"
+    return jsonify({"msg": message, "data": data}), status
 
 # Delete user category
 @api.route('/categories/<int:user_id>/<int:category_id>', methods=['DELETE'])
