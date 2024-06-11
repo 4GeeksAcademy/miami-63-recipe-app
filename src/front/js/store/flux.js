@@ -171,7 +171,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error('Error fetching user categories:', error);
                 }
             },
-			
 			submitRecipe: async (recipe) => {
 				const store = getStore()
 				const opts = {
