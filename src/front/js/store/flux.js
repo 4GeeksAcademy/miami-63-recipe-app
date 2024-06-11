@@ -6,7 +6,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			token: null,
 			items: [],
 			user: null,
-            categories: []
+			recipes: [],
+			categories: []
 		},
 		actions: {
 			itemSearch: async (search) => {
@@ -29,9 +30,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			itemClear: () => {
-                localStorage.removeItem("items");
-                setStore({ items: [] });
-            },
+				localStorage.removeItem("items");
+				setStore({ items: [] });
+			},
 			syncTokenFromSessionStore: () => {
 				const token = sessionStorage.getItem("token")
 				if (token && token != "" && token != undefined) setStore({ token: token });
@@ -126,7 +127,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({
 							"password": password,
-							"token" : token
+							"token": token
 						}),
 					});
 					const result = await response.json();
@@ -144,12 +145,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			localStorageToStore: () => {
 				const storedItems = JSON.parse(localStorage.getItem("items"));
 				if (storedItems) {
-                    setStore({ items: storedItems });
-                };
+					setStore({ items: storedItems });
+				};
 				console.log(getStore().items)
 			},
 			fetchUserCategories: async () => {
                 try {
+					console.log({user:getStore().user})
                     const response = await fetch(base + 'categories/' + getStore().user, {
                         method: 'GET',
                         headers: {
@@ -158,12 +160,61 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                     });
                     const result = await response.json();
+					if (result.data) {
+						setStore({ categories: result.data });
+					}
+					else {
+						setStore({ categories: [] });
+					}
 					console.log(result)
-                    setStore({ categories: result });
                 } catch (error) {
                     console.error('Error fetching user categories:', error);
                 }
-            }
+            },
+			
+			submitRecipe: async (recipe) => {
+				const store = getStore()
+				const opts = {
+					headers: {
+						// changed to getstore.token instead of just token
+						Authorization: "Bearer " + store.token,
+						'Content-Type': 'application/json'
+					},
+					method: "POST",
+
+					body: JSON.stringify({
+						// changed to title to match routes.py
+						title: recipe.name,
+						description: recipe.description,
+						ingredients: recipe.ingredients,
+						directions: recipe.directions,
+						nutrition_facts: {
+							calories: recipe.calories,
+							protein_in_grams: recipe.protein,
+							carbohydrates_in_grams: recipe.carbohydrates,
+							fats_in_grams: recipe.fats,
+							sodium_in_mg: recipe.sodium,
+							cholestorol_in_mg: recipe.cholestorol,
+							fiber_in_grams: recipe.fiber,
+							sugars_in_grams: recipe.sugar,
+						}
+					}),
+				};
+				console.log({ opts: opts })
+				fetch(base + "recipes", opts)
+					.then((response) => response.json())
+					.then((data) => {
+						if (data.msg == "ok") {
+							console.log(store.token)
+							false.push(item);
+							// might need to add code to make sure it doesn't double add an existing recipe
+							// you can use .includes to do this
+							setStore({ recipes: [...recipes, data] });
+						}
+					})
+					.catch((error) => { console.log(error, store.token) });
+
+			}
 		}
 	};
 };

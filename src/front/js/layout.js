@@ -13,6 +13,9 @@ import { ResetRequest } from "./pages/reset-request";
 import { ChangePassword } from "./pages/change-password";
 import injectContext from "./store/appContext";
 
+import { CreateRecipe } from "./pages/CreateRecipe";
+import { RecipePage } from "./pages/RecipePage";
+
 import { Navbar } from "./component/navbar";
 
 const LayoutContent = () => {
@@ -30,6 +33,8 @@ const LayoutContent = () => {
                 <Route element={<Search />} path="/search" />
                 <Route element={<Signup />} path="/signup" />
                 <Route element={<Login />} path="/login" />
+                <Route element={<CreateRecipe />} path="/createrecipe" />
+                <Route element={<RecipePage />} path="recipepage/:id" />
                 <Route element={<ResetRequest />} path="/reset-request" />
                 <Route element={<ChangePassword />} path="/change-password" />
                 <Route element={<h1>Not found!</h1>} />
