@@ -98,7 +98,7 @@ export const RecipeBoard = () => {
 
       {/* Create Recipe Modal */}
       <div ref={modalRef} className="modal fade" id="createRecipeModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog modal-xl">
+        <div className="modal-dialog">
           <div className="modal-content" style={{ backgroundColor: "#f2f2f2" }}>
             <div className="modal-header">
               <h3 className="modal-title w-100 text-center" id="exampleModalLabel">
@@ -107,36 +107,44 @@ export const RecipeBoard = () => {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            {/* Modal - Name */}
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="form-label" style={{ marginLeft: "150px" }}>
-                <b>Recipe Name:</b>
-              </label>
-              <input type="name" className="form-control w-75 mx-auto" id="addName" value={name} onChange={(e) => setName(e.target.value)}></input>
-            </div>
+            <div className="modal-body">
+              <div className="container">
+                <div className="row justify-content-center">
+                  <div className="col-md-10">
+                    {/* Modal - Name */}
+                    <div className="mb-3">
+                      <label htmlFor="addName" className="form-label">
+                        <b>Recipe Name:</b>
+                      </label>
+                      <input type="name" className="form-control" id="addName" value={name} onChange={(e) => setName(e.target.value)}></input>
+                    </div>
 
-            {/* Modal - Description */}
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="form-label" style={{ marginLeft: "150px" }}>
-                <b>Description:</b>
-              </label>
-              <input type="description" className="form-control w-75 mx-auto" id="addDescription" value={description} onChange={(e) => setDescription(e.target.value)}></input>
-            </div>
+                    {/* Modal - Description */}
+                    <div className="mb-3">
+                      <label htmlFor="addDescription" className="form-label">
+                        <b>Description:</b>
+                      </label>
+                      <input type="description" className="form-control" id="addDescription" value={description} onChange={(e) => setDescription(e.target.value)}></input>
+                    </div>
 
-            {/* Modal - Ingredients */}
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlTextarea1" className="form-label" style={{ marginLeft: "150px" }}>
-                <b>Ingredients:</b>
-              </label>
-              <textarea className="form-control w-75 mx-auto" id="exampleFormControlTextarea1" rows="3" value={ingredients} onChange={(e) => setIngredients(e.target.value)}></textarea>
-            </div>
+                    {/* Modal - Ingredients */}
+                    <div className="mb-3">
+                      <label htmlFor="exampleFormControlTextarea1" className="form-label">
+                        <b>Ingredients:</b>
+                      </label>
+                      <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={ingredients} onChange={(e) => setIngredients(e.target.value)}></textarea>
+                    </div>
 
-            {/* Modal - Directions */}
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlTextarea1" className="form-label" style={{ marginLeft: "150px" }}>
-                <b>Directions:</b>
-              </label>
-              <textarea className="form-control w-75 mx-auto" id="exampleFormControlTextarea1" rows="3" value={directions} onChange={(e) => setDirections(e.target.value)}></textarea>
+                    {/* Modal - Directions */}
+                    <div className="mb-3">
+                      <label htmlFor="exampleFormControlTextarea2" className="form-label">
+                        <b>Directions:</b>
+                      </label>
+                      <textarea className="form-control" id="exampleFormControlTextarea2" rows="3" value={directions} onChange={(e) => setDirections(e.target.value)}></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Modal - Footer */}
@@ -145,6 +153,7 @@ export const RecipeBoard = () => {
                 Create
               </button>
             </div>
+
           </div>
         </div>
       </div>
