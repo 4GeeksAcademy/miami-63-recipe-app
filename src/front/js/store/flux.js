@@ -7,7 +7,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			items: [],
 			user: null,
 			recipes: [],
-			categories: []
+			recipe_id: null,
+			categories: [],
+			recipes: []
 		},
 		actions: {
 			itemSearch: async (search) => {
@@ -151,7 +153,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			fetchUserCategories: async () => {
                 try {
-					console.log({user:getStore().user})
                     const response = await fetch(base + 'categories/' + getStore().user, {
                         method: 'GET',
                         headers: {
@@ -167,6 +168,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 						setStore({ categories: [] });
 					}
 					console.log(result)
+                } catch (error) {
+                    console.error('Error fetching user categories:', error);
+                }
+            },
+			fetchUserCategoriesRecipes: async () => {
+                try {
+                    // const response = await fetch(base + 'recipes/' + getStore().user + "/" + getStore().recipe_id, {
+					const response = await fetch(base + 'recipes/2/17', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${getStore().token}` // Pass the token for authenticated requests
+                        }
+                    });
+                    const result = await response.json();
+					if (result) {
+						setStore({ recipes: result });
+					} else {
+						setStore({ recipes: [] });
+					}
                 } catch (error) {
                     console.error('Error fetching user categories:', error);
                 }
