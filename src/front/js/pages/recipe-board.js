@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/recipe-board.css";
+import { CSSTransition } from 'react-transition-group';
+import { useNavigate } from 'react-router-dom';
 
 export const RecipeBoard = () => {
   const { store, actions } = useContext(Context);
@@ -14,13 +16,17 @@ export const RecipeBoard = () => {
   const [categoryRecipes, setCategoryRecipes] = useState(null);
   const modalRef = useRef(null);
   const [category, setCategory] = useState(null);
+  const [search, setSearch] = useState("");
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const forward = useNavigate();
 
   const submitRecipe = async (e) => {
     e.preventDefault();
+    setIngredients(selectedIngredients.join(", "));
     let current_recipe = {
       name,
       description,
-      ingredients,
+      ingredients: selectedIngredients.join(", "), // Use selectedIngredients here
       directions
     };
     await actions.submitRecipe(current_recipe, store.user, id);
@@ -29,7 +35,15 @@ export const RecipeBoard = () => {
     setDescription("");
     setIngredients("");
     setDirections("");
+    setSelectedIngredients([]); // Clear selectedIngredients after submitting
   };
+
+  // Sends the user to the main home page if not logged in
+  useEffect(() => {
+    if (store.token == null) {
+        forward("/");
+    }
+  }, [store.token, store.items, forward]);
 
   useEffect(() => {
     let isMounted = true;
@@ -58,6 +72,18 @@ export const RecipeBoard = () => {
   if (!categoryRecipes) {
     return <div className="container">Loading...</div>;
   }
+
+  const handleSearch = () => {
+    actions.itemSearch(search);
+  };
+
+  const handleClear = () => {
+      actions.itemClear();
+  };
+
+  const handleAddItem = (item) => {
+    setSelectedIngredients((prevIngredients) => [...prevIngredients, item.name]);
+  };
 
   return (
     <>
@@ -127,12 +153,62 @@ export const RecipeBoard = () => {
                       <input type="description" className="form-control" id="addDescription" value={description} onChange={(e) => setDescription(e.target.value)}></input>
                     </div>
 
-                    {/* Modal - Ingredients */}
+                    {/* Ingredient search bar */}
+                    <div className="d-flex flex-column align-items-start justify-content-center mb-3">
+                      <div className="mb-1">
+                        <label htmlFor="exampleFormControlTextarea1" className="form-label">
+                          <b>Ingredients:</b>
+                        </label>
+                      </div>
+                      <div className="col-12">
+                        {store.items.length > 0 ?
+                            <button className="search-query-clear" type="submit" onClick={handleClear}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                </svg>
+                            </button>
+                            :
+                            null
+                        }
+                        <input className={`search-query-input border border-dark ${store.items.length > 0 ? 'ps-5' : 'ps-4'}`} placeholder="Search Ingredient" value={search} onChange={(e) => setSearch(e.target.value)} onKeyPress={(element) => {
+                            if (element.key === "Enter") {
+                                handleSearch();
+                            };
+                        }} />
+                        <button className="search-query-submit" type="submit" onClick={handleSearch}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
+                        </button>
+                      </div>
+                    </div>
+
                     <div className="mb-3">
-                      <label htmlFor="exampleFormControlTextarea1" className="form-label">
-                        <b>Ingredients:</b>
-                      </label>
-                      <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={ingredients} onChange={(e) => setIngredients(e.target.value)}></textarea>
+                      <CSSTransition in={store.items.length > 0} timeout={300} classNames="slide" unmountOnExit>
+                        <div className="col-12 scrollable-section mb-5">
+                          <ul className="list-group list-group-flush">
+                              {store.items.map((item, index) => (
+                                <li className="list-group-item d-flex justify-content-between align-items-center" key={index} onClick={() => handleAddItem(item)}>
+                                  <span className="col-8">
+                                      <Link to={`/item-detail/${item.id}`} className="link-hover">{item.name}</Link>
+                                  </span>
+                                  <span>
+                                      <button type="button" className="btn button-accent rounded-pill">+</button>
+                                  </span>
+                                </li>
+                              ))}
+                          </ul>
+                        </div>
+                      </CSSTransition>
+                    </div>
+
+                    {/* Modal - Ingredients List */}
+                    <div className="mb-3">
+                      <ul className="list-group list-group-flush">
+                        {selectedIngredients.map((ingredient, index) => (
+                          <li className="list-group-item" key={index}>{ingredient}</li>
+                        ))}
+                      </ul>
                     </div>
 
                     {/* Modal - Directions */}

@@ -30,6 +30,7 @@ export const UserHome = () => {
     // Fetch categories from the backend when component mounts
     useEffect(() => {
         actions.fetchUserCategories();
+        actions.itemClear();
     }, []);
 
     const toggleModal = () => {
