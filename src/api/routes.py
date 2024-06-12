@@ -259,6 +259,7 @@ def create_recipe(user_id, category_id):
 
     return jsonify(user_recipe.serialize()), 201  # Return a 201 status code for successful creation
 
+# Gets all recipes in a specific category
 @api.route('/recipes/<int:user_id>/<int:category_id>', methods=['GET'])
 def get_recipes_by_category(user_id, category_id):
     # Query the User_Recipe table to get recipes for the specified user and category
@@ -271,3 +272,33 @@ def get_recipes_by_category(user_id, category_id):
     # Serialize the recipes and return the response
     serialized_recipes = [recipe.serialize() for recipe in recipes]
     return jsonify(serialized_recipes), 200  # Return a 200 status code for successful fetch
+
+# Gets recipe by id
+@api.route('/recipe/<int:recipe_id>', methods=['GET'])
+def get_recipe_by_id(recipe_id):
+    # Query the User_Recipe table to get the recipe with the specified ID
+    recipe = User_Recipe.query.filter_by(recipe_id=recipe_id).first()
+
+    # Check if the recipe is found
+    if not recipe:
+        return jsonify({"error": "Recipe not found"}), 404
+
+    # Serialize the recipe and return the response
+    return jsonify(recipe.serialize()), 200  # Return a 200 status code for successful fetch
+
+# Gets category by id
+@api.route('/category/<int:category_id>', methods=['GET'])
+def get_category_by_id(category_id):
+    try:
+        # Fetch the category from the database
+        category = User_Category.query.filter_by(category_id=category_id).first()
+        
+        if not category:
+            return jsonify({"error": "Category not found"}), 404
+        
+        # Serialize the category object
+        category_data = category.serialize()
+        
+        return jsonify(category_data), 200
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500

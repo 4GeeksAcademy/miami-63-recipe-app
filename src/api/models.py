@@ -74,6 +74,7 @@ class User_Category(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     category_id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(90), nullable=False)
+    recipes = db.relationship('User_Recipe', backref='category', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<User_Category {self.category_id}>'

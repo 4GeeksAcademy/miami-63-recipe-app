@@ -6,6 +6,7 @@ import { Home } from "./pages/home";
 import { UserHome } from "./pages/user-home";
 import { ItemDetail } from "./pages/item-detail";
 import { RecipeBoard } from "./pages/recipe-board";
+import { RecipePage } from "./pages/recipe-page";
 import { Search } from "./pages/search";
 import { Signup } from "./pages/signup";
 import { Login } from "./pages/login";
@@ -14,8 +15,6 @@ import { ChangePassword } from "./pages/change-password";
 import injectContext from "./store/appContext";
 
 import { CreateRecipe } from "./pages/CreateRecipe";
-import { RecipePage } from "./pages/RecipePage";
-
 import { Navbar } from "./component/navbar";
 
 const LayoutContent = () => {
@@ -29,12 +28,12 @@ const LayoutContent = () => {
                 <Route element={<Home />} path="/" />
                 <Route element={<UserHome />} path="/user-home" />
                 <Route element={<ItemDetail />} path="/item-detail/:id" />
-                <Route element={<RecipeBoard />} path="/recipe-board" />
+                <Route element={<RecipeBoard />} path="/recipe-board/:id" />
+                <Route element={<RecipePage />} path="/recipe-page/:id" />
                 <Route element={<Search />} path="/search" />
                 <Route element={<Signup />} path="/signup" />
                 <Route element={<Login />} path="/login" />
                 <Route element={<CreateRecipe />} path="/createrecipe" />
-                <Route element={<RecipePage />} path="recipepage/:id" />
                 <Route element={<ResetRequest />} path="/reset-request" />
                 <Route element={<ChangePassword />} path="/change-password" />
                 <Route element={<h1>Not found!</h1>} />

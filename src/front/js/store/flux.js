@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user: null,
 			recipes: [],
 			recipe_id: null,
+			category_id: null,
 			categories: [],
 			recipes: []
 		},
@@ -172,39 +173,75 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error('Error fetching user categories:', error);
                 }
             },
-			fetchUserCategoriesRecipes: async () => {
-                try {
-                    // const response = await fetch(base + 'recipes/' + getStore().user + "/" + getStore().recipe_id, {
-					const response = await fetch(base + 'recipes/2/17', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${getStore().token}` // Pass the token for authenticated requests
-                        }
-                    });
-                    const result = await response.json();
-					if (result) {
+			fetchUserCategoriesRecipes: async (categoryId) => {
+				try {
+					const response = await fetch(base + `recipes/${getStore().user}/${categoryId}`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${getStore().token}` // Pass the token for authenticated requests
+						}
+					});
+					if (response.ok) {
+						const result = await response.json();
 						setStore({ recipes: result });
+						localStorage.setItem("recipes", JSON.stringify(result)); // Persist recipes to localStorage
+						return result; // Ensure to return the fetched result
 					} else {
 						setStore({ recipes: [] });
+						localStorage.setItem("recipes", JSON.stringify([])); // Persist empty array to localStorage
+            			return []; // Return an empty array if no results
 					}
-                } catch (error) {
-                    console.error('Error fetching user categories:', error);
-                }
-            },
-			submitRecipe: async (recipe) => {
+				} catch (error) {
+					console.error('Error fetching user categories:', error);
+					return []; // Return an empty array in case of error
+				}
+			},
+			fetchRecipeById: async (id) => {
+				try {
+					const response = await fetch(base + `recipe/${id}`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${getStore().token}`
+						}
+					});
+					if (response.ok) {
+						const result = await response.json();
+						return result;
+					} else {
+						console.error('Error fetching recipe:', response.statusText);
+					}
+				} catch (error) {
+					console.error('Error fetching recipe:', error);
+				}
+			},
+			fetchCategoryById: async (categoryId) => {
+				try {
+					const response = await fetch(base + `category/${categoryId}`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${getStore().token}` // Pass the token for authenticated requests
+						}
+					});
+					const result = await response.json();
+					return result;
+				} catch (error) {
+					console.error('Error fetching category details:', error);
+					return null;
+				}
+			},
+			submitRecipe: async (recipe, user_id, category_id) => {
 				const store = getStore()
 				const opts = {
 					headers: {
-						// changed to getstore.token instead of just token
 						Authorization: "Bearer " + store.token,
 						'Content-Type': 'application/json'
 					},
 					method: "POST",
-
 					body: JSON.stringify({
-						// changed to title to match routes.py
-						title: recipe.name,
+						recipe_name: recipe.name,
 						description: recipe.description,
 						ingredients: recipe.ingredients,
 						directions: recipe.directions,
@@ -221,19 +258,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}),
 				};
 				console.log({ opts: opts })
-				fetch(base + "recipes", opts)
+				fetch(base + `recipes/${user_id}/${category_id}`, opts)
 					.then((response) => response.json())
 					.then((data) => {
 						if (data.msg == "ok") {
-							console.log(store.token)
-							false.push(item);
-							// might need to add code to make sure it doesn't double add an existing recipe
-							// you can use .includes to do this
-							setStore({ recipes: [...recipes, data] });
+							const updatedRecipes = [...store.recipes, data];
+							setStore({ recipes: updatedRecipes });
+							localStorage.setItem("recipes", JSON.stringify(updatedRecipes)); // Persist updated recipes to localStorage
 						}
 					})
 					.catch((error) => { console.log(error, store.token) });
-
 			}
 		}
 	};

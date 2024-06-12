@@ -135,7 +135,7 @@ export const UserHome = () => {
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
                     {store.categories.map((category, index) => (
                         <div key={index} className="col">
-                            <Link to={`/recipe-board`}>
+                            <Link to={`/recipe-board/${category.category_id}`}>
                                 <div className="category-box d-flex justify-content-center align-items-center">
                                     {category.category_name}
                                     <div className="delete-board" onClick={(event) => handleDeleteBoard(event, index)}>
