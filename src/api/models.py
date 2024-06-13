@@ -47,24 +47,26 @@ class User_Recipe(db.Model):
     __tablename__ = "user_recipe"
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey("user_category.category_id"), nullable=False)
     recipe_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    recipe_title = db.Column(db.String, nullable=False)
+    recipe_name = db.Column(db.String, nullable=False)
     description = db.Column(db.String(240), nullable=True)
-    recipe_ingredients = db.Column(db.String, nullable=False)
-    recipe_directions = db.Column(db.String, nullable=False)
+    ingredients = db.Column(db.String, nullable=False)
+    directions = db.Column(db.String, nullable=False)
 
     def __repr__(self):
         return f'<User_Recipe {self.recipe_id}>'
    
     def serialize(self):
         return {
-            "user_id": self.user_id,
-            "recipe_id": self.recipe_id,
-            "recipe_title": self.recipe_title,
-            "description": self.description,
-            "recipe_ingredients": self.recipe_ingredients,
-            "recipe_directions": self.recipe_directions,
-        }
+        "user_id": self.user_id,
+        "category_id": self.category_id,
+        "recipe_id": self.recipe_id,
+        "recipe_name": self.recipe_name,
+        "description": self.description,
+        "ingredients": self.ingredients,
+        "directions": self.directions,
+    }
 
 class User_Category(db.Model):
     __tablename__ = "user_category"
@@ -72,6 +74,7 @@ class User_Category(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     category_id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(90), nullable=False)
+    recipes = db.relationship('User_Recipe', backref='category', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<User_Category {self.category_id}>'

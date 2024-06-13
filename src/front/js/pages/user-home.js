@@ -30,6 +30,7 @@ export const UserHome = () => {
     // Fetch categories from the backend when component mounts
     useEffect(() => {
         actions.fetchUserCategories();
+        actions.itemClear();
     }, []);
 
     const toggleModal = () => {
@@ -130,12 +131,12 @@ export const UserHome = () => {
 
             <div className="container mb-4">
                 <div className="d-flex justify-content-end mb-4">
-                    <button className="btn button-accent rounded-pill ps-4 pe-4" onClick={toggleModal}>Create Recipe Board</button>
+                    <button className="btn button-accent rounded-pill ps-4 pe-4" onClick={toggleModal}>Create Recipe Category</button>
                 </div>
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
                     {store.categories.map((category, index) => (
                         <div key={index} className="col">
-                            <Link to={`/recipe-board`}>
+                            <Link to={`/recipe-board/${category.category_id}`}>
                                 <div className="category-box d-flex justify-content-center align-items-center">
                                     {category.category_name}
                                     <div className="delete-board" onClick={(event) => handleDeleteBoard(event, index)}>

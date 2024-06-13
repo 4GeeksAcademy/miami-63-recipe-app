@@ -230,65 +230,75 @@ def delete_categories(user_id, category_id):
 
     return jsonify({"msg": "Category deleted successfully"}), 200
 
-@api.route('/recipes', methods=['POST'])
-@jwt_required()
-def create_recipe():
-    print("test message")
-    user_email = get_jwt_identity()
-    body = request.get_json()
-    user = User.query.filter_by(email=user_email).first()
-    new_recipe = User_Recipe(user_id=user.id, recipe_title=body['title'], description=body['description'], recipe_ingredients=body['ingredients'], recipe_directions=body['directions'])
-    db.session.add(new_recipe)
+@api.route('/recipes/<int:user_id>/<int:category_id>', methods=['POST'])
+def create_recipe(user_id, category_id):
+    # Check if the category_id exists in the user_category table
+    category = User_Category.query.filter_by(category_id=category_id).first()
+    if not category:
+        return jsonify({"error": "Category does not exist"}), 400
+
+    # Extract data from the request JSON
+    recipe_name = request.json.get("recipe_name", None)
+    description = request.json.get("description", None)
+    ingredients = request.json.get("ingredients", None)
+    directions = request.json.get("directions", None)
+
+    # Create a new User_Recipe instance
+    user_recipe = User_Recipe(
+        user_id=user_id,
+        category_id=category_id,  # Include the category_id in the creation
+        recipe_name=recipe_name,
+        description=description,
+        ingredients=ingredients,
+        directions=directions
+    )
+
+    # Add the new recipe instance to the database session and commit the changes
+    db.session.add(user_recipe)
     db.session.commit()
-    current_recipe = User_Recipe.query.filter_by(user_id = user.id, recipe_title=body['title']).first()
 
-    print(user)
-    print(current_recipe)
-    print(body)
-    new_recipe_ingredients = User_Recipe_Ingredient(
-        user_id = user.id,
-        recipe_id = current_recipe.recipe_id,
-        calories = body['nutrition_facts']['calories'], 
-        protein_in_grams = body['nutrition_facts']['protein_in_grams'],
-        carbohydrates_in_grams = body['nutrition_facts']['carbohydrates_in_grams'],
-        fats_in_grams = body['nutrition_facts']['fats_in_grams'],
-        sodium_in_mg = body['nutrition_facts']['sodium_in_mg'],
-        cholestorol_in_mg = body['nutrition_facts']['cholestorol_in_mg'], 
-        fiber_in_grams = body['nutrition_facts']['fiber_in_grams'], 
-        sugars_in_grams = body['nutrition_facts']['sugars_in_grams'])  
-    db.session.add(new_recipe_ingredients)
-    db.session.commit()
-    return jsonify(current_recipe.serialize())
+    return jsonify(user_recipe.serialize()), 201  # Return a 201 status code for successful creation
 
-# get ALL recipes
-@api.route('/recipes', methods=['GET'])
-@jwt_required()
-def get_recipe():
-    user_email = get_jwt_identity()
-    user = User.query.filter_by(email=user_email).first()
-    recipes = User_Recipe.query.filter_by(user_id=user.id).all()
-    return jsonify(recipes)
+# Gets all recipes in a specific category
+@api.route('/recipes/<int:user_id>/<int:category_id>', methods=['GET'])
+def get_recipes_by_category(user_id, category_id):
+    # Query the User_Recipe table to get recipes for the specified user and category
+    recipes = User_Recipe.query.filter_by(user_id=user_id, category_id=category_id).all()
+    
+    # Check if any recipes are found
+    if not recipes:
+        return jsonify({"error": "No recipes found for this user and category"}), 404
+    
+    # Serialize the recipes and return the response
+    serialized_recipes = [recipe.serialize() for recipe in recipes]
+    return jsonify(serialized_recipes), 200  # Return a 200 status code for successful fetch
 
-@api.route('/recipes/<int:id>', methods=['DELETE'])
-@jwt_required()
-def delete_recipe(id):
-    recipe = User_Recipe.query.filter_by(recipe_id=id).first()
-    db.session.delete(recipe)
-    db.session.commit()
-    return jsonify("recipe deleted")
+# Gets recipe by id
+@api.route('/recipe/<int:recipe_id>', methods=['GET'])
+def get_recipe_by_id(recipe_id):
+    # Query the User_Recipe table to get the recipe with the specified ID
+    recipe = User_Recipe.query.filter_by(recipe_id=recipe_id).first()
 
-#Get all of user's categories
-@api.route('/users/<int:user_id>/categories', methods=['GET'])
-@jwt_required()  # Requires a valid JWT token
-def get_all_categories(user_id):
+    # Check if the recipe is found
+    if not recipe:
+        return jsonify({"error": "Recipe not found"}), 404
 
+    # Serialize the recipe and return the response
+    return jsonify(recipe.serialize()), 200  # Return a 200 status code for successful fetch
+
+# Gets category by id
+@api.route('/category/<int:category_id>', methods=['GET'])
+def get_category_by_id(category_id):
     try:
-        current_user_id = get_jwt_identity()
-        if current_user_id != user_id:
-            return jsonify({"error": "You are not authorized to perform this action"}), 403
-
-        categories = User_Category.query.filter_by(user_id=user_id).all()
-        serialized_categories = [category.serialize() for category in categories] 
-        return jsonify(serialized_categories), 200
+        # Fetch the category from the database
+        category = User_Category.query.filter_by(category_id=category_id).first()
+        
+        if not category:
+            return jsonify({"error": "Category not found"}), 404
+        
+        # Serialize the category object
+        category_data = category.serialize()
+        
+        return jsonify(category_data), 200
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
