@@ -30,6 +30,8 @@ export const RecipeBoard = () => {
       directions
     };
     await actions.submitRecipe(current_recipe, store.user, id);
+    const fetchedCategoriesRecipes = await actions.fetchUserCategoriesRecipes(id);
+    setCategoryRecipes(fetchedCategoriesRecipes);
     bootstrap.Modal.getInstance(modalRef.current).hide();
     setName("");
     setDescription("");
@@ -38,15 +40,10 @@ export const RecipeBoard = () => {
     setSelectedIngredients([]); // Clear selectedIngredients after submitting
   };
 
-  // Sends the user to the main home page if not logged in
-  useEffect(() => {
-    if (store.token == null) {
-        forward("/");
-    }
-  }, [store.token, store.items, forward]);
-
   useEffect(() => {
     let isMounted = true;
+
+    if (!store.user) return;
 
     const fetchCategoryData = async () => {
       if (id) {
@@ -67,7 +64,7 @@ export const RecipeBoard = () => {
     return () => {
       isMounted = false; // Cleanup function to set the flag to false when the component is unmounted
     };
-  }, [id]);
+  }, [id, store.user]);
 
   if (!categoryRecipes) {
     return <div className="container">Loading...</div>;
