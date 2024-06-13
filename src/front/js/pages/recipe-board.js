@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "../../styles/recipe-board.css";
 import { CSSTransition } from 'react-transition-group';
 import { useNavigate } from 'react-router-dom';
+import { BackButton } from "../component/back-button";
 
 export const RecipeBoard = () => {
   const { store, actions } = useContext(Context);
@@ -85,6 +86,7 @@ export const RecipeBoard = () => {
   return (
     <>
       <div className="container">
+        <BackButton />
         <h1 className="mb-4">{category ? category.category_name : 'Loading...'}</h1>
         <div className="d-flex justify-content-between mb-4">
           <h3>Recipes</h3>

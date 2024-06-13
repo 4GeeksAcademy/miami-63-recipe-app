@@ -45,3 +45,7 @@ body {
     margin-left: 300px;
     margin-right: 300px;
 }
+
+.drop-shadow {
+    box-shadow: 0 8px 8px 3px #e7e7e7;
+}
