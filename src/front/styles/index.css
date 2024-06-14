@@ -49,3 +49,48 @@ body {
 .drop-shadow {
     box-shadow: 0 8px 8px 3px #e7e7e7;
 }
+
+.round-button-large {
+    background-color: #dddddd;
+    color: #777777;
+    border-radius: 50%;
+    border: none;
+    width: 60px;
+    height: 60px;
+    transition: background-color 0.3s ease;
+}
+
+.round-button-large:hover {
+    background-color: var(--red);
+    color: white;
+}
+
+.round-button-small {
+    background-color: #dddddd;
+    color: #777777;
+    border-radius: 50%;
+    border: none;
+    width: 30px;
+    height: 30px;
+    transition: background-color 0.3s ease;
+}
+
+.round-button-small:hover {
+    background-color: var(--red);
+    color: white;
+}
+
+.list-group-item:hover{
+    color: white;
+    transition: .7s;
+    background: var(--turquoise);
+}
+
+.list-group-item:hover a{
+    color: white;
+    transition: .7s;
+}
+
+.description {
+    font-size: 14px;
+}

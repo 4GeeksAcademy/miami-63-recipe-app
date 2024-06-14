@@ -57,15 +57,6 @@ a {
     border-radius: 40px;
 }
 
-.list-group-item:hover{
-    transition: .7s;
-    background: var(--red);
-}
-
-.list-group-item:hover .link-hover {
-    color: white;
-}
-
 .category-box {
     color: white;
     text-align: center;

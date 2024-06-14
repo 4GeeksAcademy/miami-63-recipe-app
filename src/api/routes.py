@@ -223,7 +223,7 @@ def delete_categories(user_id, category_id):
     user_category = User_Category.query.filter_by(user_id=user_id, category_id=category_id).first()
 
     if user_category is None:
-        return jsonify({"msg": "Category not found"}), 40
+        return jsonify({"msg": "Category not found"}), 404
     
     db.session.delete(user_category)
     db.session.commit()
@@ -271,7 +271,7 @@ def get_recipes_by_category(user_id, category_id):
     
     # Serialize the recipes and return the response
     serialized_recipes = [recipe.serialize() for recipe in recipes]
-    return jsonify(serialized_recipes), 200  # Return a 200 status code for successful fetch
+    return jsonify(serialized_recipes), 200
 
 # Gets recipe by id
 @api.route('/recipe/<int:recipe_id>', methods=['GET'])
@@ -284,7 +284,21 @@ def get_recipe_by_id(recipe_id):
         return jsonify({"error": "Recipe not found"}), 404
 
     # Serialize the recipe and return the response
-    return jsonify(recipe.serialize()), 200  # Return a 200 status code for successful fetch
+    return jsonify(recipe.serialize()), 200
+
+# Delete recipe by id
+@api.route('/recipe/<int:recipe_id>', methods=['DELETE'])
+def delete_recipe_by_id(recipe_id):
+    # Query the User_Recipe table to get the recipe with the specified ID
+    recipe = User_Recipe.query.filter_by(recipe_id=recipe_id).first()
+
+    if recipe is None:
+        return jsonify({"msg": "Recipe not found"}), 404
+    
+    db.session.delete(recipe)
+    db.session.commit()
+
+    return jsonify({"msg": "Recipe deleted successfully"}), 200
 
 # Gets category by id
 @api.route('/category/<int:category_id>', methods=['GET'])
