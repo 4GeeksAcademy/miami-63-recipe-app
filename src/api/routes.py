@@ -158,24 +158,28 @@ def search():
         response = requests.post(search_url, headers=headers, json=payload)
         response_data = response.json()
 
-        # Flatten the payload to only include desired fields
+        # Flatten the payload to only include desired fields and filter duplicates
         if 'foods' in response_data:
             flattened_foods = []
+            seen_names = set()
             
             for food in response_data['foods']:
-                flattened_food = {
-                    "name": food.get("description"),
-                    "id": food.get("fdcId")
-                }
+                name = food.get("description")
+                if name not in seen_names:
+                    seen_names.add(name)
+                    flattened_food = {
+                        "name": name,
+                        "id": food.get("fdcId")
+                    }
 
-                for foodNutrient in food["foodNutrients"]:
-                    nutrient_name = foodNutrient["nutrientName"]
-                    if nutrient_name in custom_property_names:
-                        custom_property_name = custom_property_names[nutrient_name]
-                        flattened_food[f"{custom_property_name}_unit"] = foodNutrient["unitName"]
-                        flattened_food[f"{custom_property_name}_value"] = foodNutrient["value"]
+                    for foodNutrient in food["foodNutrients"]:
+                        nutrient_name = foodNutrient["nutrientName"]
+                        if nutrient_name in custom_property_names:
+                            custom_property_name = custom_property_names[nutrient_name]
+                            flattened_food[f"{custom_property_name}_unit"] = foodNutrient["unitName"]
+                            flattened_food[f"{custom_property_name}_value"] = foodNutrient["value"]
 
-                flattened_foods.append(flattened_food)
+                    flattened_foods.append(flattened_food)
             
             return jsonify(flattened_foods)
     
