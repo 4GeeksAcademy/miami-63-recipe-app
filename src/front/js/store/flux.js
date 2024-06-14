@@ -163,6 +163,17 @@ const getState = ({ getStore, getActions, setStore }) => {
                     });
                     const result = await response.json();
 					if (result.data) {
+
+						result.data.sort(function (a, b) {
+							if (a.category_name.toUpperCase() < b.category_name.toUpperCase()) {
+								return -1;
+							}
+							if (a.category_name.toUpperCase() > b.category_name.toUpperCase()) {
+								return 1;
+							}
+							return 0;
+						});
+
 						setStore({ categories: result.data });
 					}
 					else {
@@ -184,6 +195,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 					if (response.ok) {
 						const result = await response.json();
+						
+						result.sort(function (a, b) {
+							if (a.recipe_name.toUpperCase() < b.recipe_name.toUpperCase()) {
+								return -1;
+							}
+							if (a.recipe_name.toUpperCase() > b.recipe_name.toUpperCase()) {
+								return 1;
+							}
+							return 0;
+						});
+
 						setStore({ recipes: result });
 						localStorage.setItem("recipes", JSON.stringify(result)); // Persist recipes to localStorage
 						return result; // Ensure to return the fetched result

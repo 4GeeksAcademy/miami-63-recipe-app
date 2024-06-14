@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { BackButton } from "../component/back-button";
 import "../../styles/home.css";
 
 export const RecipePage = () => {
@@ -31,6 +32,8 @@ export const RecipePage = () => {
     return (
         <>
             <div className="container">
+                <BackButton />
+
                 <h1 className="mb-4">{recipe.recipe_name}</h1>
 
                 <div>

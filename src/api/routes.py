@@ -158,24 +158,28 @@ def search():
         response = requests.post(search_url, headers=headers, json=payload)
         response_data = response.json()
 
-        # Flatten the payload to only include desired fields
+        # Flatten the payload to only include desired fields and filter duplicates
         if 'foods' in response_data:
             flattened_foods = []
+            seen_names = set()
             
             for food in response_data['foods']:
-                flattened_food = {
-                    "name": food.get("description"),
-                    "id": food.get("fdcId")
-                }
+                name = food.get("description")
+                if name not in seen_names:
+                    seen_names.add(name)
+                    flattened_food = {
+                        "name": name,
+                        "id": food.get("fdcId")
+                    }
 
-                for foodNutrient in food["foodNutrients"]:
-                    nutrient_name = foodNutrient["nutrientName"]
-                    if nutrient_name in custom_property_names:
-                        custom_property_name = custom_property_names[nutrient_name]
-                        flattened_food[f"{custom_property_name}_unit"] = foodNutrient["unitName"]
-                        flattened_food[f"{custom_property_name}_value"] = foodNutrient["value"]
+                    for foodNutrient in food["foodNutrients"]:
+                        nutrient_name = foodNutrient["nutrientName"]
+                        if nutrient_name in custom_property_names:
+                            custom_property_name = custom_property_names[nutrient_name]
+                            flattened_food[f"{custom_property_name}_unit"] = foodNutrient["unitName"]
+                            flattened_food[f"{custom_property_name}_value"] = foodNutrient["value"]
 
-                flattened_foods.append(flattened_food)
+                    flattened_foods.append(flattened_food)
             
             return jsonify(flattened_foods)
     
@@ -223,7 +227,7 @@ def delete_categories(user_id, category_id):
     user_category = User_Category.query.filter_by(user_id=user_id, category_id=category_id).first()
 
     if user_category is None:
-        return jsonify({"msg": "Category not found"}), 40
+        return jsonify({"msg": "Category not found"}), 404
     
     db.session.delete(user_category)
     db.session.commit()
@@ -271,7 +275,7 @@ def get_recipes_by_category(user_id, category_id):
     
     # Serialize the recipes and return the response
     serialized_recipes = [recipe.serialize() for recipe in recipes]
-    return jsonify(serialized_recipes), 200  # Return a 200 status code for successful fetch
+    return jsonify(serialized_recipes), 200
 
 # Gets recipe by id
 @api.route('/recipe/<int:recipe_id>', methods=['GET'])
@@ -284,7 +288,21 @@ def get_recipe_by_id(recipe_id):
         return jsonify({"error": "Recipe not found"}), 404
 
     # Serialize the recipe and return the response
-    return jsonify(recipe.serialize()), 200  # Return a 200 status code for successful fetch
+    return jsonify(recipe.serialize()), 200
+
+# Delete recipe by id
+@api.route('/recipe/<int:recipe_id>', methods=['DELETE'])
+def delete_recipe_by_id(recipe_id):
+    # Query the User_Recipe table to get the recipe with the specified ID
+    recipe = User_Recipe.query.filter_by(recipe_id=recipe_id).first()
+
+    if recipe is None:
+        return jsonify({"msg": "Recipe not found"}), 404
+    
+    db.session.delete(recipe)
+    db.session.commit()
+
+    return jsonify({"msg": "Recipe deleted successfully"}), 200
 
 # Gets category by id
 @api.route('/category/<int:category_id>', methods=['GET'])
