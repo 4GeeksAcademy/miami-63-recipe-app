@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
-import { useNavigate } from 'react-router-dom';
 import { BackButton } from "../component/back-button";
 import "../../styles/home.css";
 

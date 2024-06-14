@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect} from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { useParams } from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { BackButton } from "../component/back-button";
 
 import "../../styles/user-home.css";
 
@@ -33,6 +34,8 @@ export const ItemDetail = () => {
     return (
         <>
             <div className="container">
+                <BackButton />
+
                 <h1 className="mb-4">Nutrition Facts</h1>
                 <h3 className="mb-4">{item.name}</h3>
 
